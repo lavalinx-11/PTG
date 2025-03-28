@@ -18,6 +18,9 @@ in vec3 normalFromCtrl[];
 
 out vec2 uvCoordFromEval;
 out vec3 normalFromEval;
+out vec3 eyeDirfromEval;
+out vec3 lightDirFromEval;
+out float fogValFromEval;
 
 vec2 interpolateVec2(vec2 v0, vec2 v1, vec2 v2) {
     return gl_TessCoord.x * v0 + gl_TessCoord.y * v1 + gl_TessCoord.z * v2;
@@ -31,6 +34,10 @@ vec4 interpolateVec4(vec4 v0, vec4 v1, vec4 v2) {
     return  gl_TessCoord.x * v0 + gl_TessCoord.y * v1 + gl_TessCoord.z * v2;
 }
 
+
+ const float fogDensity = 0.02;
+ const float fogGradient = 1.5;
+
 void main() {
    
     uvCoordFromEval = interpolateVec2(uvCoordFromCtrl[0], uvCoordFromCtrl[1], uvCoordFromCtrl[2]);
@@ -39,5 +46,16 @@ void main() {
     vec4 position = interpolateVec4(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_in[2].gl_Position);
     vec4 height = texture(heightMap,uvCoordFromEval);
     position.z = height.r;
+
+
+    vec3 vertPos = vec3(viewMatrix * modelMatrix * position);
+    vec3 vertDir = normalize(vertPos);
+
+    eyeDirfromEval = -vertDir;
+    lightDirFromEval = normalize(lightPos - vertPos);
+    float distance = length(vertPos);
+    fogValFromEval = clamp(exp(-pow((distance*fogDensity), fogGradient)), 0.0,1.0);
+
+
     gl_Position =  projectionMatrix * viewMatrix * modelMatrix * position ;
 }

@@ -70,6 +70,67 @@ bool Body::OnCreate() {
     return true;
 }
 
+void Body::StraightLineConstraint(float slope, float y_intercept, float deltaTime)
+{
+	float positionConstraint = pos.y - slope * pos.x - y_intercept;
+	float JV = vel.y - slope * vel.x; // this is the velocity constraint
+
+	float baumgarteStabilizationParameter = 0.1;
+	float bias = baumgarteStabilizationParameter * positionConstraint / deltaTime;
+	float JJT = slope * slope + 1;
+	float lagrangianMultiplier = (-JV - bias) / ((1 / mass) * JJT); // this is lambda
+	Vec3 JT = Vec3(-slope, 1, 0); // Jacobian transposed
+	Vec3 changeInVel = (1 / mass) * JT * lagrangianMultiplier;
+	vel += changeInVel;
+}
+
+void Body::QuadraticConstraint(float a, float b, float c, float deltaTime)
+{
+	float positionConstraint = a * pos.x * pos.x + b * pos.x + c - pos.y;
+	float JV = 2 * a * pos.x * vel.x + b * vel.x - vel.y;
+	Vec3 JT = Vec3(2 * a * pos.x + b, -1, 0); // Jacobian transposed
+	float baumgarteStabilizationParameter = 0.1;
+	float bias = baumgarteStabilizationParameter * positionConstraint / deltaTime;
+	float JJT = (2 * a * pos.x + b) * (2 * a * pos.x + b) + 1;
+	float lagrangianMultiplier = (-JV - bias) / ((1 / mass) * JJT); // this is lambda
+	Vec3 changeInVel = (1 / mass) * JT * lagrangianMultiplier;
+	vel += changeInVel;
+
+}
+
+void Body::CircleConstraint(float r, Vec3 circleCentrePos, float deltaTime)
+{
+	float positionConstraint =
+		(pos.x - circleCentrePos.x) * (pos.x - circleCentrePos.x)
+		+ (pos.y - circleCentrePos.y) * (pos.y - circleCentrePos.y)
+		- r * r;
+
+	float JV =
+		(2 * pos.x - 2 * circleCentrePos.x) * vel.x
+		+ (2 * pos.y - 2 * circleCentrePos.y) * vel.y;
+
+	Vec3 JT = Vec3(2 * pos.x - 2 * circleCentrePos.x, 2 * pos.y - 2 * circleCentrePos.y, 0);
+
+	float baumgarteStabilizationParameter = 0.1;
+	float bias = baumgarteStabilizationParameter * positionConstraint / deltaTime;
+
+	float JJT = (2 * pos.x - 2 * circleCentrePos.x) * (2 * pos.x - 2 * circleCentrePos.x)
+		+ (2 * pos.y - 2 * circleCentrePos.y) * (2 * pos.y - 2 * circleCentrePos.y);
+
+	float lagrangianMultiplier = (-JV - bias) / ((1 / mass) * JJT); // this is lambda
+	Vec3 changeInVel = (1 / mass) * JT * lagrangianMultiplier;
+	vel += changeInVel;
+
+}
+
+void Body::SphereConstraint(float r, Vec3 sphereCentrePos, float deltaTime)
+{
+	// TODO for YOU
+	// Look at the circleConstraint for clues on how to code this...
+}
+
+
+
 void Body::OnDestroy() {
 }
 

@@ -9,6 +9,7 @@
 #include "Scene2g.h"
 #include "Scene2p.h"
 #include "Scene3g.h"
+#include "Scene3p.h"
 #include "Scene4g.h"
 #include "Scene4p.h"
 
@@ -54,7 +55,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	}
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE4p);
+	BuildNewScene(SCENE_NUMBER::SCENE3p);
 	/********************************************************************************/
 	return true;
 }
@@ -168,7 +169,10 @@ bool SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 		currentScene = new Scene3g();
 		status = currentScene->OnCreate();
 		break;
-
+	case SCENE_NUMBER::SCENE3p:
+		currentScene = new Scene3p();
+		status = currentScene->OnCreate();
+		break;
 	case SCENE_NUMBER::SCENE4g:
 		currentScene = new Scene4g();
 		status = currentScene->OnCreate();

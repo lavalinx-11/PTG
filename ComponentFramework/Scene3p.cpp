@@ -1,4 +1,4 @@
-#include "Scene2p.h"
+#include "Scene3p.h"
 #include <glew.h>
 #include <iostream>
 #include <SDL.h>
@@ -7,83 +7,54 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Body.h"
-#include "Plane.h"
 #include "SkyBox.h"
-#include "Collision.h"
 #include "Texture.h"
 
 
 
-Scene2p::Scene2p()
-	: sphereA{ nullptr }
-	, sphereB{ nullptr }
+Scene3p::Scene3p()
+	: jellyfishHead{ nullptr }
+	, tentacleSpheres{ nullptr }
 	, shader{ nullptr }
-	, sphereAmesh{ nullptr }
-	, sphereBmesh{ nullptr }
-	, sphereATex{ nullptr }
-	, sphereBTex{ nullptr }
-	, planeTex{ nullptr }
 	, drawInWireMode{ true }
-	, plane{ nullptr }
-	, planeMesh{ nullptr }
 	, drawNormals{ true }
+	, mesh{ nullptr }
 	, planeAngleRadians{ 0 }
 	, cam{ nullptr }
 	, skyblox { nullptr }
 {
-	Debug::Info("Created Scene2p: ", __FILE__, __LINE__);
+	Debug::Info("Created Scene3p: ", __FILE__, __LINE__);
 }
 
-Scene2p::~Scene2p() {
-	Debug::Info("Deleted Scene2p: ", __FILE__, __LINE__);
+Scene3p::~Scene3p() {
+	Debug::Info("Deleted Scene3p: ", __FILE__, __LINE__);
 }
 
-bool Scene2p::OnCreate() {
-	Debug::Info("Loading assets Scene2p: ", __FILE__, __LINE__);
+bool Scene3p::OnCreate() {
+	Debug::Info("Loading assets Scene3p: ", __FILE__, __LINE__);
 	trackball.XaxisLock = false;
 	trackball.ZaxisLock = false;
-	sphereA = new Body();
-	sphereA->OnCreate();
-	sphereA->rad = 1;
-	sphereA->pos.y = 0.0f;
-
-	sphereAmesh = new Mesh("meshes/Sphere.obj");
-	sphereAmesh->OnCreate();
-
-	sphereATex = new Texture();
-	sphereATex->LoadImage("textures/evilEye.jpg");
 	
 
-	sphereB = new Body();
-	sphereB->OnCreate();
-	sphereB->rad = 1;
-	sphereB->pos = Vec3(0.5f, 0.0f, -5.0f);
+	jellyfishHead = new Body();
+	jellyfishHead->OnCreate();
+	jellyfishHead->rad = 6;
+	jellyfishHead->pos.set(-1.5, 4, -25);
 
+	mesh = new Mesh("meshes/Sphere.obj");
+	mesh->OnCreate();
 
-	sphereB->pos.y = sphereA->pos.y;
-	sphereBmesh = new Mesh("meshes/Sphere.obj");
-	sphereBmesh->OnCreate();
+	const int numAnchors = 10;
+	Vec3 anchorPos(-6.0f, 0.0f, -25);
+	for (int i = 0; i < numAnchors; i++) {
+		anchors.push_back(new Body());
+		anchors[i]->pos = anchorPos;
+		anchors[i]->rad = 0.5f;
+		// Move the anchor position for the next swing through this loop 
+		anchorPos += Vec3(spacing, 0, 0);
+	}
+	// Lets set up the first tentacle (Umer will do this in a not so great way)
 
-	sphereBTex = new Texture();
-	sphereBTex->LoadImage("textures/evilEye.jpg");
-
-	plane = new Body();
-	plane->OnCreate();
-	plane->pos = Vec3(0.0f, -1.25f, 0.0f);
-	// Initially, the plane normal points to your nose
-	planeNormal.set(0, 0, 1);
-
-	plane->orientation = QMath::angleAxisRotation(85, Vec3(-1, 0, 0));
-
-	// Rotate normal based on the plane's orientation
-	planeNormal = QMath::rotate(planeNormal, plane->orientation);
-
-
-	planeMesh = new Mesh("meshes/Plane.obj");
-	planeMesh->OnCreate();
-
-	planeTex = new Texture();
-	planeTex->LoadImage("textures/subTexture.jpg");
 
 
 	drawNormalsShader = new Shader("shaders/normalVert.glsl", "shaders/normalFrag.glsl", nullptr, nullptr, "shaders/normalGeom.glsl");
@@ -109,60 +80,40 @@ bool Scene2p::OnCreate() {
 	if (shader->OnCreate() == false) {
 		std::cout << "Shader failed ... we have a problem\n";
 	}
-	Litpos[0] = Vec3(0.0f, 5.0f, 0.0f);   // Light above the object
-	Litpos[1] = Vec3(0.0f, -5.0f, 0.0f);  // Light below the object
-	Litpos[2] = Vec3(5.0f, 0.0f, 5.0f);   // Light in front-right
-	Litpos[3] = Vec3(-5.0f, 0.0f, 5.0f);  // Light in front-left
-	Litpos[4] = Vec3(0.0f, 0.0f, -5.0f);  // Light behind the object
-
-
-	Diffuse[0] = Vec4(0.0, 0.5, 0.5, 1.0);  // Strong purple (mix of red and blue)
-	Diffuse[1] = Vec4(0.0, 1.0, 0.5, 1.0);  // Extra blue contribution
-	Diffuse[2] = Vec4(0.0, 0.0, 0.5, 0.2);  // Soft purple mix
-	Diffuse[3] = Vec4(0.2, 0.0, 0.0, 0.5);  // No contribution
-	Diffuse[4] = Vec4(0.0, 0.5, 0.0, 0.5);  // No contribution
-
-
-	Specular[0] = Vec4(0.5, 0.0, 0.5, 0.5);  // Strong white highlights
-	Specular[1] = Vec4(0.0, 0.0, 1.0, 0.3);  // Blue highlights
-	Specular[2] = Vec4(0.5, 0.0, 1.0, 0.3);  // Soft white-blue mix
-	Specular[3] = Vec4(0.0, 0.0, 0.0, 0.3);  // No contribution
-	Specular[4] = Vec4(0.0, 0.0, 0.0, 0.3);  // No contribution
 
 
 	
 	return true;
 }
 
-void Scene2p::OnDestroy() {
+void Scene3p::OnDestroy() {
 	Debug::Info("Deleting assets Scene1: ", __FILE__, __LINE__);
-	sphereA->OnDestroy();
-	delete sphereA;
 
-	sphereB->OnDestroy();
-	delete sphereB;
+	jellyfishHead->OnDestroy();
+	delete jellyfishHead;
 
-	plane->OnDestroy();
-	delete plane;
-
-	sphereAmesh->OnDestroy();
-	delete sphereAmesh;
-
-	sphereBmesh->OnDestroy();
-	delete sphereBmesh;
-
-	planeMesh->OnDestroy();
-	delete planeMesh;
+	mesh->OnDestroy();
+	delete mesh;
 
 	shader->OnDestroy();
 	delete shader;
+
+	for (auto anchor : anchors) {
+		anchor->OnDestroy();
+		delete anchor;
+	}
+
+	for (auto tentacleSphere : tentacleSpheres) {
+		tentacleSphere->OnDestroy();
+		delete tentacleSphere;
+	}
 
 	cam->OnDestroy();
 	delete cam;
 
 }
 
-void Scene2p::HandleEvents(const SDL_Event& sdlEvent) {
+void Scene3p::HandleEvents(const SDL_Event& sdlEvent) {
 	trackball.HandleEvents(sdlEvent);
 	cam->HandelEvents(sdlEvent);
 	switch (sdlEvent.type) {
@@ -190,34 +141,7 @@ void Scene2p::HandleEvents(const SDL_Event& sdlEvent) {
 			break;
 
 		case SDL_SCANCODE_SPACE:
-			// Whack the cue ball along the direction we are looking
-			// Scott says we always look down the -z. Umer believes!!!
-			// Make velocity a direction (w = 0)
-			Vec4 changeInVelCameraSpace = Vec4(0, 0, -5, 0);
-			Matrix4 worldToCamera = cam->GetViewMatrix();
-			Matrix4 cameraToWorld = MMath::inverse(worldToCamera);
-			Vec4 changeInVelWorldSpace = cameraToWorld * changeInVelCameraSpace;
-
-			//sphereA->vel += Vec3(changeInVelWorldSpace.x, 0.0f, changeInVelWorldSpace.z);
-			sphereA->vel.x += changeInVelWorldSpace.x;
-			sphereA->vel.z += changeInVelWorldSpace.z;
-
-			// Following Umer's scribbles on the board to 
-			// convert velocity into an angular velocity 
-			Vec3 normalizedVel = VMath::normalize(sphereA->vel);
-			// Normalized rVector is just the planeNormal
-			Vec3 axisOfRotation = VMath::cross(planeNormal, normalizedVel);
-			float angularVelMagnitude = VMath::mag(sphereA->vel) / sphereA->rad;
-			//sphereA->angularVel = angularVelMagnitude * axisOfRotation;
-			sphereA->angularVel.x = angularVelMagnitude * axisOfRotation.x;
-			sphereA->angularVel.z = angularVelMagnitude * axisOfRotation.z;
-
-
-			// Then another cross product to recalcuate the linear velocity
-			// to keep the ball on the plane
-			Vec3 rVector = planeNormal * sphereA->rad;
-			sphereA->vel = VMath::cross(sphereA->angularVel, rVector);
-			std::cout << "WHACK!\n";
+			
 			break;
 		}
 		break;
@@ -240,72 +164,104 @@ void Scene2p::HandleEvents(const SDL_Event& sdlEvent) {
 
 
 
-void Scene2p::Update(const float deltaTime) {
-	// Detect collision between spheres
-	drawNormals = false;
-		if (COLLISION::SphereSphereCollisionDetected(sphereA, sphereB)) {
-			std::cout << "COLLISION!\n";
-			COLLISION::SphereSphereCollisionResponse(sphereA, sphereB);
+void Scene3p::Update(const float deltaTime) {
+	//jellyfishHead->UpdatePos(deltaTime);
 
-			Vec3 normalizedVel = VMath::normalize(sphereA->vel);
-			Vec3 axisOfRotation = VMath::cross(planeNormal, normalizedVel);
-			float angularVelMagnitude = VMath::mag(sphereA->vel) / sphereA->rad;
-			sphereA->angularVel.x = angularVelMagnitude * axisOfRotation.x;
-			sphereA->angularVel.z = angularVelMagnitude * axisOfRotation.z;			
-	}
-		sphereA->angularAcc = sphereA->accel;
-	sphereA->UpdateOrientation(deltaTime);
-	sphereA->UpdatePos(deltaTime);
-	sphereB->UpdatePos(deltaTime);
+	//// This code went in my nested loop. Looping over all the anchors and then looping 
+	//// over all the spheres per anchor
 
-	if (sphereB->pos.y > 0 || sphereA->pos.y > 0) {
-		sphereB->pos.y = 0;
-		sphereA->pos.y = 0;
-	}
+	//// Umer will just do this for one tentacle (you need to do all of them)
+	//for (int i = 0; i < 10; i++) {
+	//	float dragCoeff = 0.5f;
+	//	// Start off with laminar flow, so drag force = -cv 
+	//	Vec3 dragForce = -dragCoeff * tentacleSpheres[i]->vel;
 
-	if (sphereA->pos.x <= -5.0f || sphereA->pos.x >= 5.0f) {//checks if the ball has hit any of the borders and flips gravity with decay on velocity
-		if (sphereA->pos.x > 5.0f) {
-			sphereA->pos.x = 5.0f;
-		}
-		if (sphereA->pos.x < -5.0f) {
-			sphereA->pos.x = -5.0f;
-		}
-		sphereA->vel.x *= -1.0f;
-	}
-	if (sphereA->pos.z <= -5.0f || sphereA->pos.z >= 5.0f) {
-		if (sphereA->pos.z > 5.0f) {
-			sphereA->pos.z = 5.0f;
-		}
-		if (sphereA->pos.z < -5.0f) {
-			sphereA->pos.z = -5.0f;
-		}
-		sphereA->vel.z *= -1.0f;
-	}
-	// Making a orbit camera
-	// Visualizing Quaternions book says divide quaternions to get the change 
-	Quaternion start = cam->GetOrientation();
-	Quaternion end = trackball.getQuat();
-	// Quaternion changeInOrientation = end / start;
-	Quaternion changeInOrientation = end * QMath::inverse(start);
+	//	// Thank you Sebastien, the code commented below is not helpful, at all
+	//	// It blows up when the velocity is too high
+	//	//if (VMath::mag(tentacleSpheres[i]->vel) > 1.0f) {
+	//	//	// Switch to turbulent flow if the spheres are moving fast 
+	//	//	// That means drag force = -cv^2 
+	//	//	dragForce = -dragCoeff * tentacleSpheres[i]->vel *
+	//	//		VMath::mag(tentacleSpheres[i]->vel);
+	//	//}
 
-	cam->setOrientaion(trackball.getQuat());
+	//	Vec3 gravityForce = tentacleSpheres[i]->mass * Vec3(0, -10, 0);
+	//	Vec3 windForce = Vec3(0, 0, 0);
+	//	tentacleSpheres[i]->ApplyForce(gravityForce + dragForce + windForce);
+	//	// calculate a first approximation of velocity based on acceleration 
+	//	tentacleSpheres[i]->UpdateVel(deltaTime);
 
-	// Try Umer's scribbles on the board to orbit the sphere
-	// Step 1 - Move camera so sphere is at origin
-	cam->position -= sphereA->pos;
-	// Step 2 - Rotate around the sphere
-	cam->position = QMath::rotate(cam->position, changeInOrientation);
-	// Step 3 - Move back
-	cam->position += sphereA->pos;
+	//	// Straight line constraint
+	//	float slope = 5;
+	//	float y_intercept = 0;
+	//	//tentacleSpheres[i]->StraightLineConstraint(slope, y_intercept, deltaTime);
 
-	//long way = translate + rotate + translate again
-	Matrix4 T = MMath::translate(cam->GetPosition());	
-	Matrix4 R = MMath::toMatrix4(cam->GetOrientation());
+	//	// Quadratic constraint
+	//	float a = 0.1;
+	//	float b = 0;
+	//	float c = -5;
+	//	//tentacleSpheres[i]->QuadraticConstraint(a, b, c, deltaTime);
 
+	//	float r = 1;
+	//	//tentacleSpheres[i]->CircleConstraint(r, circleCentrePos, deltaTime);
+	//	{
+	//		Vec3 circleCentrePos = tentacleSpheres[7]->pos;
+	//		tentacleSpheres[8]->CircleConstraint(r, circleCentrePos, deltaTime);
+	//	}
+	//	{
+	//		Vec3 circleCentrePos = tentacleSpheres[8]->pos;
+	//		tentacleSpheres[9]->CircleConstraint(r, circleCentrePos, deltaTime);
+	//	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//	// update position using corrected velocities based on rod constraint 
+	//	tentacleSpheres[8]->UpdatePos(deltaTime);
+	//	tentacleSpheres[9]->UpdatePos(deltaTime);
+	//}
+
+	//// Making a orbit camera
+	//// Visualizing Quaternions book says divide quaternions to get the change 
+	//Quaternion start = cameraOri;
+	//Quaternion end = trackball.getQuat();
+	//// Quaternion changeInOrientation = end / start;
+	//Quaternion changeInOrientation = end * QMath::inverse(start);
+
+	//cameraOri = trackball.getQuat();
+
+	//// Try Umer's scribbles on the board to orbit the sphere
+	//// Step 1 - Move camera so sphere is at origin
+	//cameraPos -= jellyfishHead->pos;
+	//// Step 2 - Rotate around the sphere
+	//cameraPos = QMath::rotate(cameraPos, changeInOrientation);
+	//// Step 3 - Move back
+	//cameraPos += jellyfishHead->pos;
+
+	//// Think about Umer's cat pictures for this next bit
+	//Matrix4 T = MMath::translate(cameraPos);
+	//Matrix4 R = MMath::toMatrix4(cameraOri);
+	//viewMatrix = MMath::inverse(R) * MMath::inverse(T);
 
 }
 
-void Scene2p::Render() const {
+void Scene3p::Render() const {
 	/// Set the background color then clear the screen
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -318,69 +274,22 @@ void Scene2p::Render() const {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	/*glUseProgram(shader->GetProgram());
-	glBindTexture(GL_TEXTURE_2D, planeTex->getTextureID());
-	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
-	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
-	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, plane->GetModelMatrix() * plane->GetModelMatrix());
-	glUniform3fv(shader->GetUniformID("Litpos[0]"), 5, *Litpos); 
-	glUniform4fv(shader->GetUniformID("Specular[0]"), 5, (GLfloat*)Specular); 
-	glUniform4fv(shader->GetUniformID("Diffuse[0]"), 5, (GLfloat*)Diffuse); 
-
-
-	planeMesh->Render(GL_TRIANGLES);
-
 	glUseProgram(shader->GetProgram());
-	glBindTexture(GL_TEXTURE_2D, sphereATex->getTextureID());
 	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
 	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
-	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, sphereA->GetModelMatrix() * sphereA->GetModelMatrix());
-	glUniform3fv(shader->GetUniformID("Litpos[0]"), 5, *Litpos);
-	glUniform4fv(shader->GetUniformID("Specular[0]"), 5, (GLfloat*)Specular);
-	glUniform4fv(shader->GetUniformID("Diffuse[0]"), 5, (GLfloat*)Diffuse);
+	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, jellyfishHead->GetModelMatrix());
+	mesh->Render(GL_TRIANGLES);
+	
+	for (Body* anchor : anchors) {
+		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, anchor->GetModelMatrix());
+		mesh->Render(GL_TRIANGLES);
+	}
 
-
-	sphereAmesh->Render(GL_TRIANGLES);
-
-
-
-
-	glUseProgram(shader->GetProgram());
-	glBindTexture(GL_TEXTURE_2D, sphereBTex->getTextureID());
-	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
-	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
-	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, sphereB->GetModelMatrix() * sphereB->GetModelMatrix());
-	glUniform3fv(shader->GetUniformID("Litpos[0]"), 5, *Litpos);
-	glUniform4fv(shader->GetUniformID("Specular[0]"), 5, (GLfloat*)Specular);
-	glUniform4fv(shader->GetUniformID("Diffuse[0]"), 5, (GLfloat*)Diffuse);
-
-
-	sphereBmesh->Render(GL_TRIANGLES);*/
-
-	glUseProgram(shader->GetProgram());
-	glBindTexture(GL_TEXTURE_2D, sphereATex->getTextureID());
-	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
-	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
-	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, sphereA->GetModelMatrix());
-	glUniform3fv(shader->GetUniformID("Litpos[0]"), 5, *Litpos);
-	glUniform4fv(shader->GetUniformID("Specular[0]"), 5, (GLfloat*)Specular);
-	glUniform4fv(shader->GetUniformID("Diffuse[0]"), 5, (GLfloat*)Diffuse);
-	sphereAmesh->Render(GL_TRIANGLES);
-
-	glBindTexture(GL_TEXTURE_2D, sphereBTex->getTextureID());
-	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, sphereB->GetModelMatrix());
-	glUniform3fv(shader->GetUniformID("Litpos[0]"), 5, *Litpos);
-	glUniform4fv(shader->GetUniformID("Specular[0]"), 5, (GLfloat*)Specular);
-	glUniform4fv(shader->GetUniformID("Diffuse[0]"), 5, (GLfloat*)Diffuse);
-	sphereBmesh->Render(GL_TRIANGLES);
-
-	glBindTexture(GL_TEXTURE_2D, planeTex->getTextureID()); 
-	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, plane->GetModelMatrix());
-	glUniform3fv(shader->GetUniformID("Litpos[0]"), 5, *Litpos);
-	glUniform4fv(shader->GetUniformID("Specular[0]"), 5, (GLfloat*)Specular);
-	glUniform4fv(shader->GetUniformID("Diffuse[0]"), 5, (GLfloat*)Diffuse);
-	planeMesh->Render(GL_TRIANGLES);
-	glUseProgram(0);
+	for (Body* tentacleSphere : tentacleSpheres) {
+		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, tentacleSphere->GetModelMatrix());
+		mesh->Render(GL_TRIANGLES);
+	}
+	
 
 	/// Added by Scott
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -391,22 +300,12 @@ void Scene2p::Render() const {
 }
 
 
-void Scene2p::DrawNormals(const Vec4 color) const {
+void Scene3p::DrawNormals(const Vec4 color) const {
 
 	glUseProgram(drawNormalsShader->GetProgram());
 	glUniformMatrix4fv(drawNormalsShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
 	glUniformMatrix4fv(drawNormalsShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
 	glUniform4fv(drawNormalsShader->GetUniformID("color"), 1, color);
-
-	glUniformMatrix4fv(drawNormalsShader->GetUniformID("modelMatrix"), 1, GL_FALSE, sphereA->GetModelMatrix());
-	sphereAmesh->Render(GL_TRIANGLES);
-
-	glUniformMatrix4fv(drawNormalsShader->GetUniformID("modelMatrix"), 1, GL_FALSE, sphereB->GetModelMatrix());
-	sphereBmesh->Render(GL_TRIANGLES);
-
-	glUniformMatrix4fv(drawNormalsShader->GetUniformID("modelMatrix"), 1, GL_FALSE, plane->GetModelMatrix());
-	planeMesh->Render(GL_TRIANGLES);
-
 	glUseProgram(0);
 
 }

@@ -1,11 +1,11 @@
-Wed Mar 26 14:53:28 2025
+Fri Mar 28 14:52:41 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.14761 Compatibility Profile Context 21.30.44.14 30.0.13044.14002
 [INFO]: Graphics card vendor ATI Technologies Inc.
 [INFO]: Graphics card name AMD Radeon(TM) Graphics
 [INFO]: GLSL Version 4.60
-[INFO]: Created Scene4p: 
-[INFO]: Loading assets Scene4p: 
+[INFO]: Created Scene3p: 
+[INFO]: Loading assets Scene3p: 
 [INFO]: Uniforms:
 "color" loc:3
 "modelMatrix" loc:2
@@ -18,13 +18,11 @@ Wed Mar 26 14:53:28 2025
 "skybox" loc:3
 
 [INFO]: Uniforms:
-"modelMatrix" loc:2
-"projectionMatrix" loc:0
-"viewMatrix" loc:1
-
-[INFO]: Uniforms:
-"color_for_frag" loc:3
-"modelMatrix" loc:2
-"projectionMatrix" loc:0
-"viewMatrix" loc:1
+"Diffuse[0]" loc:0
+"Litpos[0]" loc:5
+"Specular[0]" loc:10
+"modelMatrix" loc:15
+"projectionMatrix" loc:16
+"viewMatrix" loc:17
+"myTexture" loc:18
 

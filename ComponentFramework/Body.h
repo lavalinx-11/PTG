@@ -47,6 +47,15 @@ public:
 	void UpdateVel(float deltaTime);
 	// Build a model matrix to send to the GPU
 	const Matrix4 GetModelMatrix() const;
+	// Building the easiest constraint Umer could think of
+	void StraightLineConstraint(float slope, float y_intercept, float deltaTime);
+	// Next up the quadratic constraint (a parabola)
+	void QuadraticConstraint(float a, float b, float c, float deltaTime);
+	// A circle constraint looks a bit like a quadratic
+	void CircleConstraint(float r, Vec3 circleCentrePos, float deltaTime);
+	// TODO for YOU
+	// See if you can figure out a sphere constraint
+	void SphereConstraint(float r, Vec3 sphereCentrePos, float deltaTime);
 };
 
 #endif

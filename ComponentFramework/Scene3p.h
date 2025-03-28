@@ -1,7 +1,9 @@
-#ifndef SCENE2P_H
-#define SCENE2P_H
+#ifndef SCENE3P_H
+#define SCENE3P_H
+#include <iostream>
 #include "Scene.h"
 #include "Vector.h"
+#include <Vector>
 #include <Matrix.h>
 #include <QMath.h>
 #include "Trackball.h"
@@ -16,21 +18,30 @@ class Mesh;
 class Shader;
 class Texture;
 
-class Scene2p : public Scene {
+class Scene3p : public Scene {
 private:
-	Body* sphereA;
-	Body* sphereB;
-	Body* plane;
+	// We will have one big sphere for the jellyfish's head
+	Body* jellyfishHead;
+	Matrix4 jellyMatrix;
+
+	// Smaller spheres just to show us where the tentacles are anchored
+	std::vector<Body*> anchors;
+	std::vector<Matrix4> achorMatrix;
+
+	// And the smallest spheres will make up the tentacles
+	std::vector<Body*> tentacleSpheres;
+	std::vector<Matrix4> tentacleMatrix;
+
+	// These variables will tells us how long each tentacle will be
+	// and the spacing between individual spheres
+	const int numSpheresPerAnchor = 10;
+	const float spacing = 1.0f;
 
 
-	Mesh* sphereAmesh;
-	Mesh* sphereBmesh;
-	Mesh* planeMesh;
+	Vec3	   cameraPos;
+	Quaternion cameraOri;
 
-	Vec3 planeNormal;
-
-	Plane* planeShape;
-
+	Mesh* mesh;
 	SkyBox* skyblox;
 
 	Shader* shader;
@@ -40,17 +51,13 @@ private:
 	Matrix4 viewMatrix;
 	Matrix4 projectionMatrix;
 
-	Texture* sphereATex;
-	Texture* sphereBTex;
-	Texture* planeTex;
+	
 
 	Trackball trackball;
 	
 	Camera* cam;
 
-	Vec4 Diffuse[5];
-	Vec4 Specular[5];
-	Vec3 Litpos[5];
+	
 
 
 
@@ -60,8 +67,8 @@ private:
 	float planeAngleRadians;
 
 public:
-	explicit Scene2p();
-	virtual ~Scene2p();
+	explicit Scene3p();
+	virtual ~Scene3p();
 
 	virtual bool OnCreate() override;
 	virtual void OnDestroy() override;
@@ -73,4 +80,4 @@ public:
 };
 
 
-#endif // SCENE2P_H
+#endif // SCENE3P_H

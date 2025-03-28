@@ -17,24 +17,41 @@ class Texture;
 
 class Scene4g : public Scene {
 private:
+	// Body
 	Body* sub;
-	Shader* tesselationShader;
-	Shader* reflectionShader;
-	Mesh* mesh;
 	Body* terrain;
+
+
+	// Shaders
+	Shader* tessShader;
+	Shader* reflectionShader;
+	
+	// Meshes
+	Mesh* mesh;
 	Mesh* terrainMesh;
-	Matrix4 terrainModelMatrix;
+	
+	// Trackball and Camera
+	Trackball trackball;
+	Camera* cam;
+
+	// Textures
 	Texture* terrainTexture;
 	Texture* heightMap;
-	float tessLevel = 1.0f;
+	Texture* diffuseMap;
+	Texture* normalMap;
 	Texture* texture;
+	
+	
+	// Math Variables
+	Matrix4 terrainModelMatrix;
 	Matrix4 modelMatrix;
-	bool drawInWireMode;
-	Trackball trackball;
 	Vec4 Diffuse[5];
 	Vec4 Specular[5];
-	Vec3 Litpos[5];
-	Camera* cam;
+	Vec3 Litpos;
+	
+	// Regular Variables
+	bool drawInWireMode;
+	float tessLevel = 1.0f;
 
 public:
 	explicit Scene4g();

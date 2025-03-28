@@ -17,7 +17,7 @@
 
 Scene4g::Scene4g() :
 	sub(nullptr),
-	tesselationShader(nullptr),
+	tessShader(nullptr),
 	mesh(nullptr),
 	reflectionShader(nullptr),
 	drawInWireMode(false),
@@ -26,6 +26,8 @@ Scene4g::Scene4g() :
 	terrainMesh(nullptr),
 	terrainTexture(nullptr),
 	heightMap(nullptr),
+	normalMap(nullptr),
+	diffuseMap(nullptr),
 	terrain(nullptr)
 {
 	Debug::Info("Created Scene2: ", __FILE__, __LINE__);
@@ -37,6 +39,8 @@ Scene4g::~Scene4g() {
 
 bool Scene4g::OnCreate() {
 	Debug::Info("Loading assets Scene2: ", __FILE__, __LINE__);
+	
+	// Sphere Definition
 	sub = new Body();
 	sub->OnCreate();
 	sub->pos = Vec3(0.0f, 1.0f, 0.0f);
@@ -47,13 +51,13 @@ bool Scene4g::OnCreate() {
 	texture = new Texture();
 	texture->LoadImage("textures/evilEye.jpg");
 
-	
+	// Tessalation Check
 	GLint MaxPatchVertices = 0;
 	glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
 	printf("Max supported patch vertices %d\n", MaxPatchVertices);
 	glPatchParameteri(GL_PATCH_VERTICES, 3);
 	
-
+	// Terrain Initialization
 	terrain = new Body();
 	terrain->OnCreate();
 	terrain->pos = Vec3(0.0f, 0.0f, 0.0f);
@@ -66,9 +70,19 @@ bool Scene4g::OnCreate() {
 	terrainModelMatrix = MMath::translate(0.0f, -1.0f, 0.0f) * MMath::rotate(10, Vec3(1.0f,0.0f,0.0f)) * MMath::scale(40.0f,1.0f,40.0f);
 
 	
-
+	// Height Map
 	heightMap = new Texture;
 	heightMap->LoadImage("textures/terrainHeight.png");
+
+	// Normal Map
+	normalMap = new Texture;
+	normalMap->LoadImage("textures/terrainNormal.png");
+
+	// Diffuse Map
+	diffuseMap = new Texture;
+	diffuseMap->LoadImage("textures/terrainDiffuse.png");
+	
+	// Camera Initialization
 	cam = new Camera();
 	cam->SkySetup("textures/hallpx.png",
 		"textures/hallpy.png",
@@ -77,11 +91,12 @@ bool Scene4g::OnCreate() {
 		"textures/hallny.png",
 		"textures/hallnz.png"
 	);
-	cam->position = Vec3(0.0f, -1.0f, -7.0f);
+	cam->position = Vec3(0.0f, -1.0f, -3.0f);
 
-	tesselationShader = new Shader("shaders/tessalationVert.glsl", "shaders/tessalationFrag.glsl", 
+	// Shaders
+	tessShader = new Shader("shaders/tessalationVert.glsl", "shaders/tessalationFrag.glsl", 
 		"shaders/tessalationCtrl.glsl", "shaders/tessalationEval.glsl");
-	if (tesselationShader->OnCreate() == false) {
+	if (tessShader->OnCreate() == false) {
 		std::cout << "Shader failed ... we have a problem\n";
 	}
 
@@ -90,9 +105,11 @@ bool Scene4g::OnCreate() {
 		std::cout << "Shader failed ... we have a problem\n";
 	}
 	
-	
+	// Model Matrix
 	modelMatrix = MMath::toMatrix4(Quaternion(1.0f, Vec3(0.0f, 0.0f, 0.0)));
 	return true;
+
+	Litpos = Vec3(0.0f, 10.0f, 5.0f);
 }
 
 void Scene4g::OnDestroy() {
@@ -108,6 +125,16 @@ void Scene4g::OnDestroy() {
 
 	terrain->OnDestroy();
 	delete terrain;
+
+	terrainMesh->OnDestroy();
+	delete terrainMesh;
+
+
+	tessShader->OnDestroy();
+	delete tessShader;
+
+	reflectionShader->OnDestroy();
+	delete reflectionShader;
 }
 
 void Scene4g::HandleEvents(const SDL_Event& sdlEvent) {
@@ -125,15 +152,15 @@ void Scene4g::HandleEvents(const SDL_Event& sdlEvent) {
 
 		case SDL_SCANCODE_T:
 		{
-			if (tessLevel < 29) {
-				tessLevel = tessLevel + 3;
+			if (tessLevel < 31) {
+				tessLevel = tessLevel + 1;
 			}
 			break;
 		}
 		case SDL_SCANCODE_Y:
 		{
 			if (tessLevel > 0) {
-				tessLevel = tessLevel - 3;
+				tessLevel = tessLevel - 1;
 			}
 			break;
 		}
@@ -162,6 +189,7 @@ void Scene4g::Update(const float deltaTime) {
 void Scene4g::Render() const {
 	
 	/// Set the background color then clear the screen
+	glEnable(GL_DEPTH_TEST);
 	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -173,22 +201,26 @@ void Scene4g::Render() const {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
+	//glDepthMask(GL_TRUE);
+	
+	
+	glUseProgram(tessShader->GetProgram());
+	glUniformMatrix4fv(tessShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
+	glUniformMatrix4fv(tessShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
+	glUniformMatrix4fv(tessShader->GetUniformID("modelMatrix"), 1, GL_FALSE, terrain->GetModelMatrix());
+	glUniform1f(tessShader->GetUniformID("tessalationLev"), tessLevel);
+	glUniform3fv(tessShader->GetUniformID("lightPos"), 1, Litpos);
+	terrainMesh->Render(GL_PATCHES);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, heightMap->getTextureID());
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, terrainTexture->getTextureID());
+	glBindTexture(GL_TEXTURE_2D, normalMap->getTextureID());
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, diffuseMap->getTextureID());
 
-	
 
 
-	glUseProgram(tesselationShader->GetProgram());
-	glUniformMatrix4fv(tesselationShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
-	glUniformMatrix4fv(tesselationShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
-	glUniformMatrix4fv(tesselationShader->GetUniformID("modelMatrix"), 1, GL_FALSE, terrain->GetModelMatrix());
-	glUniform1f(tesselationShader->GetUniformID("tessalationLev"), tessLevel);
-
-	terrainMesh->Render(GL_PATCHES);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	glUseProgram(0);
 }
