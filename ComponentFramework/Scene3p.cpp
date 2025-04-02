@@ -180,7 +180,6 @@ void Scene3p::Update(const float deltaTime) {
 	Vec3 rotatedOffset = QMath::rotate(offset, cam->GetOrientation());
 	cameraPos = (jellyfishHead->pos + rotatedOffset);
 	cam->SetView(cam->GetOrientation(), cameraPos);
-
 	// This code went in my nested loop. Looping over all the anchors and then looping 
 	// over all the spheres per anchor
 
@@ -265,7 +264,7 @@ void Scene3p::Render() const {
 
 	glUseProgram(shader->GetProgram());
 	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
-	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
+	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewAlt());
 	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, jellyfishHead->GetModelMatrix());
 	mesh->Render(GL_TRIANGLES);
 	
@@ -293,7 +292,7 @@ void Scene3p::DrawNormals(const Vec4 color) const {
 
 	glUseProgram(drawNormalsShader->GetProgram());
 	glUniformMatrix4fv(drawNormalsShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
-	glUniformMatrix4fv(drawNormalsShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
+	glUniformMatrix4fv(drawNormalsShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewAlt());
 	glUniform4fv(drawNormalsShader->GetUniformID("color"), 1, color);
 	glUseProgram(0);
 

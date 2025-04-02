@@ -308,6 +308,8 @@ void Scene4p::Update(const float deltaTime) {
 				}
 			}
 		}
+	}
+
 
 		// Now that you have the collision point, let's check if we will collide
 		// I'm tired after all this coding. Let's use Scott's distance method
@@ -318,10 +320,11 @@ void Scene4p::Update(const float deltaTime) {
 			// Scott to the rescue again with his reflect method
 			sphereA->vel = VMath::reflect(sphereA->vel, collisionNormal);
 		}
-	}
 
 	drawNormals = false;
-}
+	}
+
+
 
 void Scene4p::Render() const {
 	/// Set the background color then clear the screen

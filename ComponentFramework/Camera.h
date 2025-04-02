@@ -35,6 +35,10 @@ public:
 		//return MMath::inverse(MMath::toMatrix4(orientation)) * MMath::inverse(MMath::translate(position));
 		return  MMath::translate(position) * MMath::toMatrix4(orientation);
 	}
+	Matrix4 GetViewAlt() const {
+		return MMath::inverse(MMath::toMatrix4(orientation)) * MMath::inverse(MMath::translate(position));
+
+	}
 
 	Matrix4 GetProjectionMatrix() const {
 		return projection;
