@@ -25,7 +25,8 @@ private:
 	Body* pointOnLine01; // Point on line going through vertices v0 and v1
 	Body* pointOnLine12; // vertices v1 and v2
 	Body* pointOnLine20; // vertices v2 and v0
-	
+	Body* collisionPoint;
+
 	
 	//Meshes
 	Mesh* triangleMesh;
@@ -56,6 +57,7 @@ private:
 
 
 	//Variables
+
 	bool rolling = false;
 	bool drawInWireMode;
 	bool drawNormals;

@@ -32,6 +32,7 @@ Scene4p::Scene4p()
 	, pointOnLine01{ nullptr }
 	, pointOnLine12{ nullptr }
 	, pointOnLine20{ nullptr }
+	, collisionPoint{ nullptr }
 {
 	Debug::Info("Created Scene4p: ", __FILE__, __LINE__);
 }
@@ -88,6 +89,16 @@ bool Scene4p::OnCreate() {
 	pointOnLine20->OnCreate();
 	pointOnLine20->rad = 0.25;
 
+
+	//Collision Point
+	collisionPoint = new Body();
+	collisionPoint->OnCreate();
+	collisionPoint->rad = 0.3;
+
+
+
+
+	//Shaders
 	drawNormalsShader = new Shader("shaders/normalVert.glsl", "shaders/normalFrag.glsl", nullptr, nullptr, "shaders/normalGeom.glsl");
 	if (drawNormalsShader->OnCreate() == false) {
 		std::cout << "drawNormalsShader failed ... we have a problem\n";
@@ -166,6 +177,10 @@ void Scene4p::OnDestroy() {
 	delete pointOnPlane;
 
 
+	//Collision Point
+	collisionPoint->OnDestroy();
+	delete collisionPoint;
+
 }
 
 void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {
@@ -195,6 +210,10 @@ void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {
 			sphereA->pos = sphereA->pos + Vec3(0.25f, 0.0f, 0.0f);
 			break;
 		}
+		case SDL_SCANCODE_SPACE: {
+			sphereA->vel = Vec3(0.0f, 0.0f, -1.0f);
+			break;
+		}
 		break;
 		case SDL_SCANCODE_N:
 			if (drawNormals == false) {
@@ -222,7 +241,7 @@ void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {
 
 
 void Scene4p::Update(const float deltaTime) {
-	
+	sphereA->UpdatePos(deltaTime);
 
 	//Projecting the center of the sphere onto the triangle
 	Vec4 pointOnPlane4d = project(sphereA->pos, TMath::getPlane(*triangleShape));
@@ -241,8 +260,65 @@ void Scene4p::Update(const float deltaTime) {
 	Vec4 pointOn20 = project(sphereA->pos, line20);
 	pointOnLine20->pos = VMath::perspectiveDivide(pointOn20);
 
+	//collision point
+	if (TMath::isPointInsideTriangle(pointOnPlane->pos, *triangleShape)) {
+		collisionPoint->pos = pointOnPlane->pos;
+	}
+	else {
+		// What are the two closest edges to the point on the plane?
+		float dist01 = fabs(DQMath::orientedDist(pointOnPlane->pos, line01));
+		float dist12 = fabs(DQMath::orientedDist(pointOnPlane->pos, line12));
+		float dist20 = fabs(DQMath::orientedDist(pointOnPlane->pos, line20));
+		if (dist01 <= dist12 && dist01 <= dist20) {
+			// If line01 is the closest line, then use that projected position
+			collisionPoint->pos = pointOnLine01->pos;
+			// Hold on, what if that position is outide the triangle?
+			if (!TMath::isPointInsideTriangle(collisionPoint->pos, *triangleShape)) {
+				if (dist12 <= dist20) {
+					collisionPoint->pos = pointOnLine12->pos;
+				}
+				else {
+					collisionPoint->pos = pointOnLine20->pos;
+				}
+			}
+		}
+		else if (dist12 <= dist01 && dist12 <= dist20) {
+			// In this case, line12 is the closest line
+			collisionPoint->pos = pointOnLine12->pos;
+			// But wait! What if that is not inside the triangle?
+			if (!TMath::isPointInsideTriangle(collisionPoint->pos, *triangleShape)) {
+				if (dist01 <= dist20) {
+					collisionPoint->pos = pointOnLine01->pos;
+				}
+				else {
+					collisionPoint->pos = pointOnLine20->pos;
+				}
+			}
+		}
+		else {
+			// Final case is where line20 is the closest line
+			collisionPoint->pos = pointOnLine20->pos;
+			// Hold your horses! What if that is not inside the triangle?
+			if (!TMath::isPointInsideTriangle(collisionPoint->pos, *triangleShape)) {
+				if (dist01 <= dist12) {
+					collisionPoint->pos = pointOnLine01->pos;
+				}
+				else {
+					collisionPoint->pos = pointOnLine12->pos;
+				}
+			}
+		}
 
-
+		// Now that you have the collision point, let's check if we will collide
+		// I'm tired after all this coding. Let's use Scott's distance method
+		if (VMath::distance(sphereA->pos, collisionPoint->pos) <= sphereA->rad) {
+			// Find the collision normal vector
+			Vec3 collisionNormal = VMath::normalize(sphereA->pos - collisionPoint->pos);
+			// Reflect the sphere off the triangle
+			// Scott to the rescue again with his reflect method
+			sphereA->vel = VMath::reflect(sphereA->vel, collisionNormal);
+		}
+	}
 
 	drawNormals = false;
 }
@@ -275,27 +351,35 @@ void Scene4p::Render() const {
 	sphereAmesh->Render(GL_TRIANGLES);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//Point on Plane
+	glUseProgram(colourShader->GetProgram());
 
-	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE,pointOnPlane->GetModelMatrix());
+	glUniformMatrix4fv(colourShader->GetUniformID("modelMatrix"), 1, GL_FALSE,pointOnPlane->GetModelMatrix());
+	glUniform4fv(static_cast<GLint>(colourShader->GetUniformID("color_for_frag")), 1, Vec4(1.0f, 0.0f, 0.0f, 0.0f));
 	sphereAmesh->Render(GL_TRIANGLES);
 	
+
+
 	//Point on lines
-	glUseProgram(colourShader->GetProgram());
 	glUniformMatrix4fv(colourShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
 	glUniformMatrix4fv(colourShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
 
 	glUniformMatrix4fv(colourShader->GetUniformID("modelMatrix"), 1, GL_FALSE, pointOnLine01->GetModelMatrix());
-	glUniform4fv(static_cast<GLint>(colourShader->GetUniformID("color_for_frag")), 1, Vec4(1.0f, 0.0f, 0.0f, 0.0f));
+	glUniform4fv(static_cast<GLint>(colourShader->GetUniformID("color_for_frag")), 1, Vec4(0.0f, 1.0f, 1.0f, 0.0f));
 	sphereAmesh->Render(GL_TRIANGLES);
 	
 	glUniformMatrix4fv(colourShader->GetUniformID("modelMatrix"), 1, GL_FALSE, pointOnLine12->GetModelMatrix());
-	glUniform4fv(static_cast<GLint>(colourShader->GetUniformID("color_for_frag")), 1, Vec4(1.0f, 0.0f, 0.0f, 0.0f));
+	glUniform4fv(static_cast<GLint>(colourShader->GetUniformID("color_for_frag")), 1, Vec4(1.0f, 1.0f, 0.0f, 0.0f));
 	sphereAmesh->Render(GL_TRIANGLES);
 	
 	glUniformMatrix4fv(colourShader->GetUniformID("modelMatrix"), 1, GL_FALSE, pointOnLine20->GetModelMatrix());
-	glUniform4fv(static_cast<GLint>(colourShader->GetUniformID("color_for_frag")), 1, Vec4(1.0f, 0.0f, 0.0f, 0.0f));
+	glUniform4fv(static_cast<GLint>(colourShader->GetUniformID("color_for_frag")), 1, Vec4(1.0f, 0.0f, 1.0f, 0.0f));
 	sphereAmesh->Render(GL_TRIANGLES);
 
+
+	//Collision Point
+	glUniformMatrix4fv(colourShader->GetUniformID("modelMatrix"), 1, GL_FALSE, collisionPoint->GetModelMatrix());
+	glUniform4fv(static_cast<GLint>(colourShader->GetUniformID("color_for_frag")), 1, Vec4(1.0f, 1.0f, 1.0f, 0.0f));
+	sphereAmesh->Render(GL_TRIANGLES);
 	
 	/// Added by Scott
 	glBindTexture(GL_TEXTURE_2D, 0);
