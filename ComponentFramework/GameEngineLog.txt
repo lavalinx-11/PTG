@@ -1,9 +1,9 @@
-Wed Apr  2 17:26:58 2025
+Wed Apr  9 11:55:43 2025
 [INFO]: Starting the SceneManager
-[INFO]: OpenGL version: 4.6.14761 Compatibility Profile Context 21.30.44.14 30.0.13044.14002
-[INFO]: Graphics card vendor ATI Technologies Inc.
-[INFO]: Graphics card name AMD Radeon(TM) Graphics
-[INFO]: GLSL Version 4.60
+[INFO]: OpenGL version: 4.6.0 NVIDIA 566.07
+[INFO]: Graphics card vendor NVIDIA Corporation
+[INFO]: Graphics card name NVIDIA GeForce RTX 3050 Laptop GPU/PCIe/SSE2
+[INFO]: GLSL Version 4.60 NVIDIA
 [INFO]: Created Scene4p: 
 [INFO]: Loading assets Scene4p: 
 [INFO]: Uniforms:
@@ -14,8 +14,8 @@ Wed Apr  2 17:26:58 2025
 
 [INFO]: Uniforms:
 "projectionMatrix" loc:0
-"viewMatrix" loc:1
 "skybox" loc:3
+"viewMatrix" loc:1
 
 [INFO]: Uniforms:
 "modelMatrix" loc:2
@@ -28,6 +28,95 @@ Wed Apr  2 17:26:58 2025
 "projectionMatrix" loc:0
 "viewMatrix" loc:1
 
-[INFO]: Deleting the SceneManager
 [INFO]: Deleting assets Scene1: 
 [INFO]: Deleted Scene4p: 
+[INFO]: Created Scene0: 
+[INFO]: Loading assets Scene0: 
+[INFO]: Uniforms:
+"Diffuse[0]" loc:0
+"Litpos[0]" loc:5
+"Specular[0]" loc:10
+"modelMatrix" loc:15
+"myTexture" loc:16
+"projectionMatrix" loc:17
+"viewMatrix" loc:18
+
+[INFO]: Deleting assets Scene0: 
+[INFO]: Deleted Scene0: 
+[INFO]: Created Scene2: 
+[INFO]: Loading assets Scene2: 
+[INFO]: Uniforms:
+"Diffuse[0]" loc:0
+"Litpos[0]" loc:5
+"Specular[0]" loc:10
+"modelMatrix" loc:15
+"myTexture" loc:16
+"projectionMatrix" loc:17
+"viewMatrix" loc:18
+
+[INFO]: Uniforms:
+"projectionMatrix" loc:0
+"skybox" loc:3
+"viewMatrix" loc:1
+
+[INFO]: Deleting assets Scene2: 
+[INFO]: Deleted Scene2: 
+[INFO]: Created Scene2: 
+[INFO]: Loading assets Scene2: 
+[INFO]: Uniforms:
+"Diffuse[0]" loc:0
+"Litpos[0]" loc:5
+"Specular[0]" loc:10
+"modelMatrix" loc:15
+"myTexture" loc:16
+"projectionMatrix" loc:17
+"viewMatrix" loc:18
+
+[INFO]: Uniforms:
+"projectionMatrix" loc:0
+"skybox" loc:3
+"viewMatrix" loc:1
+
+[INFO]: Deleting assets Scene2: 
+[INFO]: Deleted Scene2: 
+[INFO]: Created Scene2p: 
+[INFO]: Loading assets Scene2p: 
+[INFO]: Uniforms:
+"color" loc:3
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+
+[INFO]: Uniforms:
+"projectionMatrix" loc:0
+"skybox" loc:3
+"viewMatrix" loc:1
+
+[INFO]: Uniforms:
+"Diffuse[0]" loc:0
+"Litpos[0]" loc:5
+"Specular[0]" loc:10
+"modelMatrix" loc:15
+"myTexture" loc:16
+"projectionMatrix" loc:17
+"viewMatrix" loc:18
+
+[INFO]: Deleting assets Scene1: 
+[INFO]: Deleted Scene2p: 
+[INFO]: Created Scene2: 
+[INFO]: Loading assets Scene2: 
+[INFO]: Uniforms:
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"skybox" loc:3
+"viewMatrix" loc:1
+
+[INFO]: Uniforms:
+"projectionMatrix" loc:0
+"skybox" loc:3
+"viewMatrix" loc:1
+
+[WARNING]: camPos :No such uniform name in file: C:\Users\laval\Desktop\Code\ComponentFramework25.0.0\ComponentFramework24.0.0\ComponentFramework\Shader.cpp on line: 247
+[INFO]: Deleting the SceneManager
+[INFO]: Deleting assets Scene2: 
+[INFO]: Deleted Scene2: 
