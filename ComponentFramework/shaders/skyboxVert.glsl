@@ -9,6 +9,8 @@ layout(location = 0) uniform mat4 projectionMatrix;
 layout(location = 1) uniform mat4 viewMatrix;
 layout(location = 2) uniform mat4 modelMatrix;
 
+//layout (location = 3) out vec3 texture_coordinates;
+
 out vec3 texture_coordinates;
 
 
