@@ -144,6 +144,9 @@
     <ClCompile Include="Scene5g.cpp">
       <Filter>Source Files\Scenes\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="PTGScene.cpp">
+      <Filter>Source Files\Scenes\PTG</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene.h">
@@ -223,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="PTGScene.h">
+      <Filter>Header Files\Scenes\PTG</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
