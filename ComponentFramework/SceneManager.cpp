@@ -13,7 +13,7 @@
 #include "Scene4g.h"
 #include "Scene4p.h"
 #include "Scene5g.h"
-
+#include "PTGScene.h"
 SceneManager::SceneManager(): 
 	currentScene{nullptr}, window{nullptr}, timer{nullptr},
 	fps(60), isRunning{false}, fullScreen{false} {
@@ -56,7 +56,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	}
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE5g);
+	BuildNewScene(SCENE_NUMBER::PTGSCENE);
 	/********************************************************************************/
 	return true;
 }
@@ -87,7 +87,7 @@ void SceneManager::HandleEvents() {
 			switch (sdlEvent.key.keysym.scancode) {
 			[[fallthrough]]; /// C17 Prevents switch/case fallthrough warnings
 			case SDL_SCANCODE_ESCAPE:
-			case SDL_SCANCODE_Q:
+			//case SDL_SCANCODE_Q:
 				isRunning = false;
 				return;
 				
@@ -191,6 +191,11 @@ bool SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 
 	case SCENE_NUMBER::SCENE5g:
 		currentScene = new Scene5g();
+		status = currentScene->OnCreate();
+		break;
+
+	case SCENE_NUMBER::PTGSCENE:
+		currentScene = new PTGScene();
 		status = currentScene->OnCreate();
 		break;
 	default:

@@ -4,7 +4,6 @@
 #include "Vector.h"
 #include <Matrix.h>
 #include <QMath.h>
-#include "Trackball.h"
 #include "Camera.h"
 #include "Plane.h"
 #include "Triangle.h"
@@ -48,9 +47,6 @@ private:
 	//Matrices
 	Matrix4 viewMatrix;
 	Matrix4 projectionMatrix;
-
-	//Trackball
-	Trackball trackball;
 	
 	//Camera
 	Camera* cam;

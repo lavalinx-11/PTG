@@ -5,7 +5,6 @@
 #include <Matrix.h>
 #include <QMath.h>
 #include "Plane.h"
-#include "Trackball.h"
 #include "Camera.h"
 using namespace MATH;
 
@@ -28,7 +27,6 @@ private:
 	Matrix4 viewMatrix;
 	Matrix4 projectionMatrix;
 	Camera *cam;
-	Trackball trackball;
 	bool drawInWireMode;
 
 public:

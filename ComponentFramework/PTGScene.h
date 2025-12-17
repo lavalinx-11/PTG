@@ -4,7 +4,6 @@
 #include "Scene.h"
 #include <Vector.h>
 #include <Matrix.h>
-#include "Trackball.h"
 #include "Camera.h"
 using namespace MATH;
 
@@ -18,7 +17,6 @@ class Texture;
 class PTGScene : public Scene {
 private:
 	// Body
-	Body* sub;
 	Body* terrain;
 
 
@@ -30,8 +28,7 @@ private:
 	Mesh* mesh;
 	Mesh* terrainMesh;
 	
-	// Trackball and Camera
-	Trackball trackball;
+	// Camera
 	Camera* cam;
 
 	// Textures

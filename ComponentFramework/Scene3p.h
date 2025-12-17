@@ -6,7 +6,6 @@
 #include <Vector>
 #include <Matrix.h>
 #include <QMath.h>
-#include "Trackball.h"
 #include "Camera.h"
 #include "Plane.h"
 using namespace MATH;
@@ -54,11 +53,8 @@ private:
 
 	
 
-	Trackball trackball;
-	
 	Camera* cam;
 
-	
 
 
 	int anchorIndex = 0;

@@ -4,7 +4,6 @@
 #include "Vector.h"
 #include <Matrix.h>
 #include <QMath.h>
-#include "Trackball.h"
 #include "Camera.h"
 #include "Plane.h"
 using namespace MATH;
@@ -44,8 +43,6 @@ private:
 	Texture* sphereBTex;
 	Texture* planeTex;
 
-	Trackball trackball;
-	
 	Camera* cam;
 
 	Vec4 Diffuse[5];

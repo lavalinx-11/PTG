@@ -23,7 +23,7 @@ Scene2p::Scene2p()
 	, sphereBmesh{ nullptr }
 	, sphereBTex{ nullptr }
 	, planeTex{ nullptr }
-	, drawInWireMode{ true }
+	, drawInWireMode{ false }
 	, plane{ nullptr }
 	, planeMesh{ nullptr }
 	, drawNormals{ true }
@@ -100,7 +100,8 @@ bool Scene2p::OnCreate() {
 		"textures/hallnz.png"
 
 	);
-	cam->position = Vec3(0.0f, -2.0f, -5.5f);
+	cam->position = Vec3(0.0f, 2.0f, 8.0f);
+	cam->setCamMovement(true);
 	shader = new Shader("shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");
 	//shader = new Shader("shaders/defaultVert.glsl", "shaders/defaultFrag.glsl");
 
@@ -159,8 +160,7 @@ void Scene2p::OnDestroy() {
 }
 
 void Scene2p::HandleEvents(const SDL_Event& sdlEvent) {
-	trackball.HandleEvents(sdlEvent);
-	cam->HandelEvents(sdlEvent);
+	cam->HandleEvents(sdlEvent);
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {

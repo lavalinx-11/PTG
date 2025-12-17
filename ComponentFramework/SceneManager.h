@@ -29,7 +29,8 @@ private:
 		SCENE4g,
 		SCENE4p,
 		SCENE5g,
-		SCENE6
+		SCENE6,
+		PTGSCENE
 	};
 
 	class Scene* currentScene;

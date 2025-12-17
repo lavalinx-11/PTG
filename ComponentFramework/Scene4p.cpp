@@ -114,9 +114,7 @@ bool Scene4p::OnCreate() {
 		"textures/hallny.png",
 		"textures/hallnz.png"
 	);
-
-
-	//cam->position = Vec3(0.0f, 0.0f, -.0f);
+	cam->position = Vec3(0.0f, 2.0f, 10.0f);
 	shader = new Shader("shaders/defaultVert.glsl", "shaders/defaultFrag.glsl");
 	if (shader->OnCreate() == false) {
 		std::cout << "Shader failed ... we have a problem\n";
@@ -184,8 +182,7 @@ void Scene4p::OnDestroy() {
 }
 
 void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {
-	trackball.HandleEvents(sdlEvent);
-	cam->HandelEvents(sdlEvent);
+	cam->HandleEvents(sdlEvent);
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {

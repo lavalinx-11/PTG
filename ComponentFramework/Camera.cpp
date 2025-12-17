@@ -7,23 +7,32 @@
 #include "Shader.h"
 #include "Body.h"
 #include <SDL_image.h>
+
 Camera::Camera() {
 	projection = MMath::perspective(45.0f, (16.0f / 9.0f), 0.5f, 10000.0f);
-	orientation = Quaternion(1.0f, Vec3(0.0f, 0.0f, 0.0f));
 	position = Vec3(0.0f, 0.0f, -25.0f);
-	view = MMath::toMatrix4(orientation) * MMath::translate(position);
-
-}
-
-void Camera::dontTrackY() {
-
-	trackball.XaxisLock = false;
-	trackball.ZaxisLock = false;
+	orientation = Quaternion(1.0f, Vec3(0.0f, 0.0f, 0.0f));
+	pitchAngle = 0.0f;
+	yaw = 0.0f;
 }
 
 void Camera::SetView(const Quaternion& orientation_, const Vec3& position_) {
 	orientation = orientation_;
 	position = position_;
+}
+
+Vec3 Camera::GetCameraForward() {
+	Matrix4 camToWorld = MMath::inverse(GetViewMatrix());
+	Vec4 forwardCamSpace(0.0f, 0.0f, -1.0f, 0.0f);
+	Vec4 forwardWorld = camToWorld * forwardCamSpace;
+	return VMath::normalize(Vec3(forwardWorld.x, forwardWorld.y, forwardWorld.z));
+}
+
+Vec3 Camera::GetCameraRight() {
+	Matrix4 camToWorld = MMath::inverse(GetViewMatrix());
+	Vec4 rightCamSpace(1.0f, 0.0f, 0.0f, 0.0f);
+	Vec4 rightWorld = camToWorld * rightCamSpace;
+	return VMath::normalize(Vec3(rightWorld.x, rightWorld.y, rightWorld.z));
 }
 
 void Camera::OnDestroy() {
@@ -66,14 +75,88 @@ bool Camera::SkySetup(const char* posXFileName_, const char* posYFileName_, cons
 }
 
 
+void Camera::HandleEvents(const SDL_Event& event) {
 
-void Camera::HandelEvents(const SDL_Event& sdlEvent) {
-	trackball.HandleEvents(sdlEvent);
-	orientation = trackball.getQuat();
+	// Handle Mouse Events for Camera Rotation. Checks if the left mouse button is held down
+	if (!m1Override) {
+		if (event.type == SDL_MOUSEBUTTONDOWN &&
+			event.button.button == SDL_BUTTON_LEFT) {
+			mouseHeld = true;
+			ignoreNextMouseDelta = true;
+			SDL_SetRelativeMouseMode(SDL_TRUE);
+		}
+	}
+	// Handle Mouse Release
+	if (!m1Override) {
+		if (event.type == SDL_MOUSEBUTTONUP &&
+			event.button.button == SDL_BUTTON_LEFT) {
+			mouseHeld = false;
+			SDL_SetRelativeMouseMode(SDL_FALSE);
+		}
+	}
+	// Handle Mouse Motion if mouse 1 is held down or if the mouse1 override is active
+	if (event.type == SDL_MOUSEMOTION && mouseHeld || event.type == SDL_MOUSEMOTION && m1Override) {
+		if (ignoreNextMouseDelta) {
+			ignoreNextMouseDelta = false;
+			return;
+		}
+		// Get Mouse Deltas
+		float dx = (float)event.motion.xrel;
+		float dy = (float)event.motion.yrel;
+		// Rotation Sensitivity
+		// Update yaw and pitch angles
+		yaw -= dx * sensitivity;
+		pitchAngle -= dy * sensitivity;
+		// Clamp the pitch angle to avoid looking too far up or down 
+		if (pitchAngle > 89.0f) pitchAngle = 89.0f;
+		if (pitchAngle < -89.0f) pitchAngle = -89.0f;
+		/// Create the orientation quaternion from yaw and pitch
+		Quaternion yawQ = QMath::angleAxisRotation(yaw, Vec3(0.0f, 1.0f, 0.0f));
+		Quaternion pitchQ = QMath::angleAxisRotation(pitchAngle, Vec3(1.0f, 0.0f, 0.0f));
+		// Combine yaw and pitch and normalize the orientation
+		orientation = yawQ * pitchQ;
+		orientation = QMath::normalize(orientation);
+	}
+
+
+	float moveSpeed = 0.5f;
+	if (canCamMove) {
+		switch (event.type) {
+		case SDL_KEYDOWN:
+			switch (event.key.keysym.scancode) {
+
+			case SDL_SCANCODE_W: {
+
+				SetPosition(GetPosition() + GetCameraForward() * moveSpeed);
+				break;
+			}
+
+			case SDL_SCANCODE_S: {
+				SetPosition(GetPosition() - GetCameraForward() * moveSpeed);
+				break;
+			}
+			case SDL_SCANCODE_A: {
+				SetPosition(GetPosition() - GetCameraRight() * moveSpeed);
+				break;
+			}
+			case SDL_SCANCODE_D: {
+				SetPosition(GetPosition() + GetCameraRight() * moveSpeed);
+				break;
+			}
+			case SDL_SCANCODE_Q: {
+				SetPosition(GetPosition() + Vec3(0.0f, moveSpeed, 0.0f));
+				break;
+			}
+			case SDL_SCANCODE_E: {
+				SetPosition(GetPosition() - Vec3(0.0f, moveSpeed, 0.0f));
+				break;
+			}
+			}
+		}
+	}
+
 }
 
-/// Our PASS tutor didn't like the name Render since it can't render itself. 
-/// I hope this meets with his approval
 void Camera::RenderSkyBox() const{
 	if (skybox == nullptr) return;
 	//depth test makes it so the things farther away are aren't drawn or shown
@@ -82,10 +165,8 @@ void Camera::RenderSkyBox() const{
 	glDisable(GL_DEPTH_TEST);
 	glUseProgram(skybox->GetShader()->GetProgram());//goes through the skybox class to get the program id and turn on the shader
 	glUniformMatrix4fv(skybox->GetShader()->GetUniformID("projectionMatrix"), 1, GL_FALSE, projection);//gets the projection matrix
-	glUniformMatrix4fv(skybox->GetShader()->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::toMatrix4(orientation));
-	/// Here I has turned on the shader and set the matricies. The shader will remain in this state
-	/// until I turn off the shader. In Skybox::Render, I will bind the textures, because that is where
-	/// they are, then draw the cube.  
+	glUniformMatrix4fv(skybox->GetShader()->GetUniformID("viewMatrix"), 1, GL_FALSE,
+		MMath::toMatrix4(QMath::conjugate(orientation)));		/// they are, then draw the cube.  
 	skybox->Render();
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);

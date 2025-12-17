@@ -4,7 +4,6 @@
 #include "Scene.h"
 #include <Vector.h>
 #include <Matrix.h>
-#include "Trackball.h"
 #include "Camera.h"
 using namespace MATH;
 
@@ -30,8 +29,7 @@ private:
 	Mesh* mesh;
 	Mesh* terrainMesh;
 	
-	// Trackball and Camera
-	Trackball trackball;
+	// Camera
 	Camera* cam;
 
 	// Textures

@@ -9,12 +9,10 @@
 #include "Body.h"
 #include "Texture.h"
 #include <glm/glm.hpp>
-#include "Trackball.h"
 #include <QMath.h>
 
 
 PTGScene::PTGScene() :
-	sub(nullptr),
 	tessShader(nullptr),
 	mesh(nullptr),
 	reflectionShader(nullptr),
@@ -39,16 +37,11 @@ bool PTGScene::OnCreate() {
 	Debug::Info("Loading assets PTGScene: ", __FILE__, __LINE__);
 	
 	// Sphere Definition
-	sub = new Body();
-	sub->OnCreate();
-	sub->pos = Vec3(0.0f, 1.0f, 0.0f);
 
 	mesh = new Mesh("meshes/Sphere.obj");
 	mesh->OnCreate();
 
-	texture = new Texture();
-	texture->LoadImage("textures/evilEye.jpg");
-
+	
 	// Tessalation Check
 	GLint MaxPatchVertices = 0;
 	glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
@@ -89,7 +82,8 @@ bool PTGScene::OnCreate() {
 		"textures/hallny.png",
 		"textures/hallnz.png"
 	);
-	cam->position = Vec3(0.0f, -1.0f, -3.0f);
+	cam->position = Vec3(0.0f, 2.0f, 10.0f);
+	cam->setCamMovement(true);
 
 	// Shaders
 	tessShader = new Shader("shaders/tessalationVert.glsl", "shaders/tessalationFrag.glsl", 
@@ -112,9 +106,6 @@ bool PTGScene::OnCreate() {
 
 void PTGScene::OnDestroy() {
 	Debug::Info("Deleting assets PTGScene: ", __FILE__, __LINE__);
-	sub->OnDestroy();
-	delete sub;
-
 	mesh->OnDestroy();
 	delete mesh;
 
@@ -136,39 +127,27 @@ void PTGScene::OnDestroy() {
 }
 
 void PTGScene::HandleEvents(const SDL_Event& sdlEvent) {
-	cam->HandelEvents(sdlEvent);
-	//trackball.HandleEvents(sdlEvent);
+	cam->HandleEvents(sdlEvent);
+
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {
-		case SDL_SCANCODE_W:
-				{
+
+		case SDL_SCANCODE_O:
+		{
 			drawInWireMode = !drawInWireMode;
 
-			break;
-			}
-
-		case SDL_SCANCODE_T:
-		{
-			if (tessLevel < 31) {
-				tessLevel = tessLevel + 1;
-			}
-			break;
-		}
-		case SDL_SCANCODE_Y:
-		{
-			if (tessLevel > 0) {
-				tessLevel = tessLevel - 1;
-			}
 			break;
 		}
 		}
 		break;
 
 	case SDL_MOUSEMOTION:
+		//cam->HandleEvents(sdlEvent);
 		break;
 
 	case SDL_MOUSEBUTTONDOWN:
+		
 
 		break;
 
@@ -189,7 +168,7 @@ void PTGScene::Render() const {
 	/// Set the background color then clear the screen
 	glEnable(GL_DEPTH_TEST);
 	
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.0f, 10.0f, 10.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

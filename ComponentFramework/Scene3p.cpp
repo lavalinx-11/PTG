@@ -94,7 +94,6 @@ bool Scene3p::OnCreate() {
 	if (reflectionShader->OnCreate() == false) {
 		std::cout << "Shader failed ... we have a problem\n";
 	}
-	cam->dontTrackY();
 	return true;
 }
 
@@ -126,8 +125,7 @@ void Scene3p::OnDestroy() {
 }
 
 void Scene3p::HandleEvents(const SDL_Event& sdlEvent) {
-	trackball.HandleEvents(sdlEvent);
-	cam->HandelEvents(sdlEvent);
+	cam->HandleEvents(sdlEvent);
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {
@@ -286,7 +284,7 @@ void Scene3p::Render() const {
 
 	glUseProgram(reflectionShader->GetProgram());
 	glUniformMatrix4fv(reflectionShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
-	glUniformMatrix4fv(reflectionShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewAlt());
+	glUniformMatrix4fv(reflectionShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
 	glUniformMatrix4fv(reflectionShader->GetUniformID("modelMatrix"), 1, GL_FALSE, jellyfishHead->GetModelMatrix());
 	mesh->Render(GL_TRIANGLES);
 	
@@ -314,7 +312,7 @@ void Scene3p::DrawNormals(const Vec4 color) const {
 
 	glUseProgram(drawNormalsShader->GetProgram());
 	glUniformMatrix4fv(drawNormalsShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
-	glUniformMatrix4fv(drawNormalsShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewAlt());
+	glUniformMatrix4fv(drawNormalsShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
 	glUniform4fv(drawNormalsShader->GetUniformID("color"), 1, color);
 	glUseProgram(0);
 

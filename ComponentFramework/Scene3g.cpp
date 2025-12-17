@@ -9,7 +9,6 @@
 #include "Body.h"
 #include "Texture.h"
 #include <glm/glm.hpp>
-#include "Trackball.h"
 #include "Camera.h"
 #include <QMath.h>
 
@@ -30,8 +29,6 @@ Scene3g::~Scene3g() {
 }
 
 bool Scene3g::OnCreate() {
-	trackball.XaxisLock = true;
-	trackball.ZaxisLock = true;
 	Debug::Info("Loading assets Scene2: ", __FILE__, __LINE__);
 	sub = new Body();
 	sub->OnCreate();
@@ -85,7 +82,7 @@ bool Scene3g::OnCreate() {
 		"textures/hallny.png",
 		"textures/hallnz.png"
 	);
-	cam->position = Vec3(0.0f, 0.0f, -7.0f);
+	cam->position = Vec3(0.0f, 0.0f, 7.0f);
 	modelMatrix = MMath::toMatrix4(Quaternion(1.0f, Vec3(0.0f, 0.0f, 0.0)));
 	return true;
 }
@@ -103,8 +100,7 @@ void Scene3g::OnDestroy() {
 }
 
 void Scene3g::HandleEvents(const SDL_Event& sdlEvent) {
-	cam->HandelEvents(sdlEvent);
-	//trackball.HandleEvents(sdlEvent);
+	cam->HandleEvents(sdlEvent);
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {

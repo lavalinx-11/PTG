@@ -40,8 +40,7 @@ bool Scene2g::OnCreate() {
 	skull = new Body();
 	skull->OnCreate();
 
-	trackball.XaxisLock = true;
-	trackball.ZaxisLock = true;
+	
 	mesh = new Mesh("meshes/Skull.obj");
 	mesh->OnCreate();
 
@@ -99,9 +98,9 @@ bool Scene2g::OnCreate() {
 
 	cam = new Camera();
 	cam->OnCreate();
-	
-
-	
+	cam->SetPosition(Vec3(0.0f, 0.0f, 8.0f));
+	cam->setM1Override(true);
+	cam->setCamSensitivity(0.02f);
 	modelMatrix = MMath::toMatrix4(Quaternion(1.0f, Vec3(0.0f, 0.0f, 0.0)));
 	return true;
 }
@@ -135,8 +134,8 @@ void Scene2g::OnDestroy() {
 }
 
 void Scene2g::HandleEvents(const SDL_Event& sdlEvent) {
-	//cam->HandelEvents(sdlEvent);
 	trackball.HandleEvents(sdlEvent);
+	cam->HandleEvents(sdlEvent);
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {

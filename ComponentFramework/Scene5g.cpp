@@ -132,7 +132,7 @@ bool Scene5g::OnCreate() {
 		"textures/hallnz.png"
 
 	);
-	cam->position = Vec3(0.0f, -1.0f, -3.5f);
+	cam->position = Vec3(0.0f, 1.0f, 3.5f);
 
 	// Shaders
 	shader = new Shader("shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");
@@ -202,8 +202,7 @@ void Scene5g::OnDestroy() {
 }
 
 void Scene5g::HandleEvents(const SDL_Event& sdlEvent) {
-	trackball.HandleEvents(sdlEvent);
-	cam->HandelEvents(sdlEvent);
+	cam->HandleEvents(sdlEvent);
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {
@@ -424,7 +423,7 @@ void Scene5g::DrawNormals(const Vec4 color) const {
 
 	glUseProgram(drawNormalsShader->GetProgram());
 	glUniformMatrix4fv(drawNormalsShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, cam->GetProjectionMatrix());
-	glUniformMatrix4fv(drawNormalsShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewAlt());
+	glUniformMatrix4fv(drawNormalsShader->GetUniformID("viewMatrix"), 1, GL_FALSE, cam->GetViewMatrix());
 	glUniform4fv(drawNormalsShader->GetUniformID("color"), 1, color);
 	glUseProgram(0);
 

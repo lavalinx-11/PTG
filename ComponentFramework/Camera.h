@@ -4,8 +4,10 @@
 #include <Vector.h>
 #include <Matrix.h>
 #include <Quaternion.h>
+#include <MMath.h>
+#include <VMath.h>
+#include <QMath.h>
 #include "SkyBox.h"
-#include "Trackball.h"
 using namespace MATH;
 
 union SDL_Event;
@@ -15,9 +17,17 @@ private:
 	Quaternion orientation;
 	Matrix4 projection;
 	Matrix4 view;
-	Trackball trackball;
 	SkyBox* skybox;
 	Vec3 target = Vec3(0.0f, 0.0f, 0.0f);
+	float yaw = 0.0f;
+	float pitch = 0.0f;
+	float pitchAngle = 0.0f;
+	float sensitivity = 0.1f;
+	bool mouseHeld = false;
+	bool ignoreNextMouseDelta = false;
+	bool canCamMove = false;
+	bool m1Override = false;
+
 public:
 	Vec3 position;
 	Camera();
@@ -27,25 +37,16 @@ public:
 		negYFileName_, const char* negZFileName_);
 	void OnDestroy();
 	void RenderSkyBox() const;
-	void HandelEvents(const SDL_Event& sdlEvent);
+	void HandleEvents(const SDL_Event& sdlEvent);
 
-	/// Some getters and setters
 	Matrix4 GetViewMatrix() const {
-
-		//return MMath::inverse(MMath::toMatrix4(orientation)) * MMath::inverse(MMath::translate(position));
-		return  MMath::translate(position) * MMath::toMatrix4(orientation);
-	}
-	Matrix4 GetViewAlt() const {
-		return MMath::inverse(MMath::toMatrix4(orientation)) * MMath::inverse(MMath::translate(position));
-
+		Quaternion viewQuat = QMath::conjugate(orientation);
+		Matrix4 viewRotation = MMath::toMatrix4(viewQuat);
+		Matrix4 viewTranslation = MMath::translate(-position.x, -position.y, -position.z);
+		return viewRotation * viewTranslation;
 	}
 
-	Matrix4 GetProjectionMatrix() const {
-		return projection;
-	}
-
-	void dontTrackY();
-
+	Matrix4 GetProjectionMatrix() const { return projection; }
 
 	Quaternion GetOrientation() const { return orientation; }
 
@@ -68,6 +69,11 @@ public:
 			MMath::translate(translated_position);
 
 	}
-
+	void setCamMovement(bool canMove) { canCamMove = canMove; }
+	void setM1Override(bool override) { m1Override = override; }
 	void setTarget(Vec3 target_) { target = target_; }
+	void setCamSensitivity(float sensitivity_) { sensitivity = sensitivity_; }
+	// Getters for camera's worldspace directions
+	Vec3 GetCameraForward();
+	Vec3 GetCameraRight();
 };

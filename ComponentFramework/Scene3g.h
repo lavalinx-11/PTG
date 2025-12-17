@@ -4,7 +4,6 @@
 #include "Scene.h"
 #include <Vector.h>
 #include <Matrix.h>
-#include "Trackball.h"
 #include "Camera.h"
 using namespace MATH;
 
@@ -23,7 +22,6 @@ private:
 	Texture* texture;
 	Matrix4 modelMatrix;
 	bool drawInWireMode;
-	Trackball trackball;
 	Vec4 Diffuse[5];
 	Vec4 Specular[5];
 	Vec3 Litpos[5];

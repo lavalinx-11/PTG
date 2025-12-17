@@ -61,10 +61,7 @@ bool Scene1p::OnCreate() {
 		"textures/hallnz.png"
 
 	);
-	cam->position = Vec3(0.0f, -2.0f, -5.5f);
-	projectionMatrix = MMath::perspective(45.0f, (16.0f / 9.0f), 0.5f, 100.0f);
-	viewMatrix = MMath::lookAt(Vec3(0.0f, -3.0f, 20.0f), Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, 1.0f, 0.0f));
-	//modelMatrix.loadIdentity();
+	cam->position = Vec3(0.0f, 2.0f, 5.5f);
 	return true;
 }
 
@@ -89,6 +86,7 @@ void Scene1p::OnDestroy() {
 }
 
 void Scene1p::HandleEvents(const SDL_Event& sdlEvent) {
+	cam->HandleEvents(sdlEvent);
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {

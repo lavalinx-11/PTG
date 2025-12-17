@@ -9,7 +9,6 @@
 #include "Body.h"
 #include "Texture.h"
 #include <glm/glm.hpp>
-#include "Trackball.h"
 #include <QMath.h>
 
 
@@ -89,8 +88,8 @@ bool Scene4g::OnCreate() {
 		"textures/hallny.png",
 		"textures/hallnz.png"
 	);
-	cam->position = Vec3(0.0f, -1.0f, -3.0f);
-
+	cam->position = Vec3(0.0f, 1.0f, 3.0f);
+	cam->setCamMovement(true);
 	// Shaders
 	tessShader = new Shader("shaders/tessalationVert.glsl", "shaders/tessalationFrag.glsl", 
 		"shaders/tessalationCtrl.glsl", "shaders/tessalationEval.glsl");
@@ -136,12 +135,11 @@ void Scene4g::OnDestroy() {
 }
 
 void Scene4g::HandleEvents(const SDL_Event& sdlEvent) {
-	cam->HandelEvents(sdlEvent);
-	//trackball.HandleEvents(sdlEvent);
+	cam->HandleEvents(sdlEvent);
 	switch (sdlEvent.type) {
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {
-		case SDL_SCANCODE_W:
+		case SDL_SCANCODE_P:
 				{
 			drawInWireMode = !drawInWireMode;
 

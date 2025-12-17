@@ -1,9 +1,34 @@
-Mon Dec 15 21:26:28 2025
+Wed Dec 17 05:11:26 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 Compatibility Profile Context 25.12.1.251128
 [INFO]: Graphics card vendor ATI Technologies Inc.
 [INFO]: Graphics card name AMD Radeon RX 9060 XT
 [INFO]: GLSL Version 4.60
+[INFO]: Created PTGScene: 
+[INFO]: Loading assets PTGScene: 
+[INFO]: Uniforms:
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+"skybox" loc:3
+
+[INFO]: Uniforms:
+"tessalationLev" loc:12
+"heightMap" loc:1
+"viewMatrix" loc:13
+"modelMatrix" loc:4
+"lightPos" loc:3
+"projectionMatrix" loc:8
+"diffuseMap" loc:0
+"normalMap" loc:2
+
+[INFO]: Uniforms:
+"viewMatrix" loc:1
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"skybox" loc:3
+
+[INFO]: Deleting assets PTGScene: 
+[INFO]: Deleted PTGScene: 
 [INFO]: Created Scene5g: 
 [INFO]: Loading assets Scene5g: 
 [INFO]: Uniforms:
@@ -42,6 +67,31 @@ Mon Dec 15 21:26:28 2025
 "diffuseMap" loc:0
 "normalMap" loc:2
 
-[INFO]: Deleting the SceneManager
 [INFO]: Deleting assets Scene1: 
 [INFO]: Deleted Scene5g: 
+[INFO]: Created Scene4g: 
+[INFO]: Loading assets Scene4g: 
+[INFO]: Uniforms:
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+"skybox" loc:3
+
+[INFO]: Uniforms:
+"tessalationLev" loc:12
+"heightMap" loc:1
+"viewMatrix" loc:13
+"modelMatrix" loc:4
+"lightPos" loc:3
+"projectionMatrix" loc:8
+"diffuseMap" loc:0
+"normalMap" loc:2
+
+[INFO]: Uniforms:
+"viewMatrix" loc:1
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"skybox" loc:3
+
+[INFO]: Deleting the SceneManager
+[INFO]: Deleting assets Scene4g: 
+[INFO]: Deleted Scene4g: 
