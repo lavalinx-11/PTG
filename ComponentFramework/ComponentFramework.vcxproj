@@ -202,6 +202,15 @@
     <None Include="shaders\texturePhongFrag.glsl" />
     <None Include="shaders\texturePhongVert.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="meshes\Cube.obj" />
+    <Object Include="meshes\Mario.obj" />
+    <Object Include="meshes\Plane.obj" />
+    <Object Include="meshes\Skull.obj" />
+    <Object Include="meshes\Sphere.obj" />
+    <Object Include="meshes\Sub.obj" />
+    <Object Include="meshes\Tetrahedron.obj" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

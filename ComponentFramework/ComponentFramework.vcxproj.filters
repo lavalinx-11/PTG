@@ -67,6 +67,9 @@
     <Filter Include="Header Files\Scenes\PTG">
       <UniqueIdentifier>{8638c37b-9b45-43b0-8907-d6c5a27f54c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Meshes">
+      <UniqueIdentifier>{6212a2a9-3af4-4d57-925c-2baeea80be0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -291,5 +294,28 @@
     <None Include="shaders\colourFrag.glsl">
       <Filter>Resource Files\Default</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="meshes\Cube.obj">
+      <Filter>Meshes</Filter>
+    </Object>
+    <Object Include="meshes\Mario.obj">
+      <Filter>Meshes</Filter>
+    </Object>
+    <Object Include="meshes\Plane.obj">
+      <Filter>Meshes</Filter>
+    </Object>
+    <Object Include="meshes\Skull.obj">
+      <Filter>Meshes</Filter>
+    </Object>
+    <Object Include="meshes\Sphere.obj">
+      <Filter>Meshes</Filter>
+    </Object>
+    <Object Include="meshes\Sub.obj">
+      <Filter>Meshes</Filter>
+    </Object>
+    <Object Include="meshes\Tetrahedron.obj">
+      <Filter>Meshes</Filter>
+    </Object>
   </ItemGroup>
 </Project>
