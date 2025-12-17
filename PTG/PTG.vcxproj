@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{D64FA1C9-97D7-4F25-A6D5-1C2CAEA20729}</ProjectGuid>
+    <RootNamespace>ComponentFramework</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>PTG</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\GameDev\OpenGL\include;C:\GameDev\SDL\include;C:\GameDev\MathLibrary\include;C:\GameDev\MathLibraryEx\include;$(IncludePath)</IncludePath>
+    <TargetName>PTG</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\$(ProjectName)\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\GameDev\OpenGL\lib;C:\GameDev\SDL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2_image.lib;SDL2main.lib;glew32.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="source\Engine\Body.cpp" />
+    <ClCompile Include="source\Engine\Collision.cpp" />
+    <ClCompile Include="source\Engine\Debug.cpp" />
+    <ClCompile Include="source\Engine\Mesh.cpp" />
+    <ClCompile Include="source\Engine\Plane.cpp" />
+    <ClCompile Include="source\Engine\Timer.cpp" />
+    <ClCompile Include="source\Graphics\Camera.cpp" />
+    <ClCompile Include="source\Graphics\Shader.cpp" />
+    <ClCompile Include="source\Graphics\SkyBox.cpp" />
+    <ClCompile Include="source\Graphics\Texture.cpp" />
+    <ClCompile Include="source\Graphics\Trackball.cpp" />
+    <ClCompile Include="source\Graphics\Window.cpp" />
+    <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\Scenes\PTGScene.cpp" />
+    <ClCompile Include="source\Scenes\Scene0g.cpp" />
+    <ClCompile Include="source\Scenes\Scene0p.cpp" />
+    <ClCompile Include="source\Scenes\Scene1g.cpp" />
+    <ClCompile Include="source\Scenes\Scene1p.cpp" />
+    <ClCompile Include="source\Scenes\Scene2g.cpp" />
+    <ClCompile Include="source\Scenes\Scene2p.cpp" />
+    <ClCompile Include="source\Scenes\Scene3g.cpp" />
+    <ClCompile Include="source\Scenes\Scene3p.cpp" />
+    <ClCompile Include="source\Scenes\Scene4g.cpp" />
+    <ClCompile Include="source\Scenes\Scene4p.cpp" />
+    <ClCompile Include="source\Scenes\Scene5g.cpp" />
+    <ClCompile Include="source\Scenes\SceneManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Engine\Body.h" />
+    <ClInclude Include="include\Engine\Collision.h" />
+    <ClInclude Include="include\Engine\Debug.h" />
+    <ClInclude Include="include\Engine\Mesh.h" />
+    <ClInclude Include="include\Engine\Plane.h" />
+    <ClInclude Include="include\Engine\Timer.h" />
+    <ClInclude Include="include\Graphics\Camera.h" />
+    <ClInclude Include="include\Graphics\Shader.h" />
+    <ClInclude Include="include\Graphics\SkyBox.h" />
+    <ClInclude Include="include\Graphics\Texture.h" />
+    <ClInclude Include="include\Graphics\tiny_obj_loader.h" />
+    <ClInclude Include="include\Graphics\Trackball.h" />
+    <ClInclude Include="include\Graphics\Window.h" />
+    <ClInclude Include="include\Scenes\Scene.h" />
+    <ClInclude Include="include\Scenes\Scene0g.h" />
+    <ClInclude Include="include\Scenes\Scene0p.h" />
+    <ClInclude Include="include\Scenes\Scene1g.h" />
+    <ClInclude Include="include\Scenes\Scene1p.h" />
+    <ClInclude Include="include\Scenes\Scene2g.h" />
+    <ClInclude Include="include\Scenes\Scene3g.h" />
+    <ClInclude Include="include\Scenes\Scene3p.h" />
+    <ClInclude Include="include\Scenes\Scene4g.h" />
+    <ClInclude Include="include\Scenes\Scene4p.h" />
+    <ClInclude Include="include\Scenes\Scene5g.h" />
+    <ClInclude Include="include\Scenes\SceneManager.h" />
+    <ClInclude Include="PTGScene.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="GameEngineLog.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\colourFrag.glsl" />
+    <None Include="shaders\defaultFrag.glsl" />
+    <None Include="shaders\defaultVert.glsl" />
+    <None Include="shaders\normalFrag.glsl" />
+    <None Include="shaders\normalGeom.glsl" />
+    <None Include="shaders\normalVert.glsl" />
+    <None Include="shaders\reflectionFrag.glsl" />
+    <None Include="shaders\reflectionFragOG.glsl" />
+    <None Include="shaders\reflectionVert.glsl" />
+    <None Include="shaders\reflectionVertOG.glsl" />
+    <None Include="shaders\skyboxFrag.glsl" />
+    <None Include="shaders\skyboxVert.glsl" />
+    <None Include="shaders\tessalationCtrl.glsl" />
+    <None Include="shaders\tessalationEval.glsl" />
+    <None Include="shaders\tessalationFrag.glsl" />
+    <None Include="shaders\tessalationVert.glsl" />
+    <None Include="shaders\texturePhongFrag.glsl" />
+    <None Include="shaders\texturePhongVert.glsl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
