@@ -150,6 +150,15 @@
     <ClCompile Include="source\Scenes\PTGScene.cpp">
       <Filter>Source Files\Scenes\PTG</Filter>
     </ClCompile>
+    <ClCompile Include="source\Engine\TerrainMeshBuilder.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Engine\NoiseGenerator.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Engine\TerrainChunk.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PTGScene.h">
@@ -229,6 +238,18 @@
     </ClInclude>
     <ClInclude Include="include\Scenes\SceneManager.h">
       <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\TerrainMeshBuilder.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\TerrainMeshData.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\NoiseGenerator.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\TerrainChunk.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

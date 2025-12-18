@@ -4,8 +4,15 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "Graphics/tiny_obj_loader.h"
 
-Mesh::Mesh(const char* filename_):dateLength{0}, drawmode{0}, 
-vao{0}, vbo{0} {
+Mesh::Mesh(const char* filename_)
+    : dateLength{0} 
+    , drawmode{0}
+	, indexCount{0}
+    , vao{0}
+    , vbo{0}
+	, ebo{0}
+
+{
 	filename = filename_;
 }
 
@@ -102,17 +109,95 @@ void Mesh::StoreMeshData(GLenum drawmode_) {
 
 void Mesh::Render() const {
     glBindVertexArray(vao);
-	glDrawArrays(drawmode, 0, dateLength);
-	glBindVertexArray(0); // Unbind the VAO
+
+    if (ebo != 0) {
+        glDrawElements(drawmode, indexCount, GL_UNSIGNED_INT, 0);
+    }
+    else {
+        glDrawArrays(drawmode, 0, dateLength);
+    }
+
+	glBindVertexArray(0); // unbind the vao
 }
 
 void Mesh::Render(GLenum drawmode_) const {
     glBindVertexArray(vao);
-	glDrawArrays(drawmode_, 0, dateLength);
-	glBindVertexArray(0); // Unbind the VAO
+
+    if (ebo != 0) {
+        glDrawElements(drawmode_, indexCount, GL_UNSIGNED_INT, 0);
+    }
+    else {
+        glDrawArrays(drawmode_, 0, dateLength);
+    }
+
+	glBindVertexArray(0); //unbind the vao
+}
+
+
+// Terrain Mesh Data version of OnCreate
+bool Mesh::OnCreate(const TerrainMeshData& data)
+{
+    
+    indexCount = data.indices.size();
+
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    struct Vertex {
+        Vec3 position;
+        Vec3 normal;
+        Vec2 uv;
+    };
+
+    std::vector<Vertex> packedVertices;
+    packedVertices.reserve(data.vertices.size());
+
+    for (size_t i = 0; i < data.vertices.size(); i++) {
+        packedVertices.push_back({
+            data.vertices[i],
+            data.normals[i],
+            data.uvs[i]
+            });
+    }
+
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        packedVertices.size() * sizeof(Vertex),
+        packedVertices.data(),
+        GL_STATIC_DRAW
+    );
+
+    glGenBuffers(1, &ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(
+        GL_ELEMENT_ARRAY_BUFFER,
+        data.indices.size() * sizeof(unsigned int),
+        data.indices.data(),
+        GL_STATIC_DRAW
+    );
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+        (void*)offsetof(Vertex, normal));
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+        (void*)offsetof(Vertex, uv));
+
+    glBindVertexArray(0);
+	packedVertices.clear();
+    return true;
 }
 
 void Mesh::OnDestroy() {
+    if(ebo != 0) {
+        glDeleteBuffers(1, &ebo);
+	}
     glDeleteBuffers(1, &vbo);
 	glDeleteVertexArrays(1, &vao);
 }

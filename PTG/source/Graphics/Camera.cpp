@@ -119,7 +119,6 @@ void Camera::HandleEvents(const SDL_Event& event) {
 	}
 
 
-	float moveSpeed = 0.5f;
 	if (canCamMove) {
 		switch (event.type) {
 		case SDL_KEYDOWN:
@@ -143,11 +142,11 @@ void Camera::HandleEvents(const SDL_Event& event) {
 				SetPosition(GetPosition() + GetCameraRight() * moveSpeed);
 				break;
 			}
-			case SDL_SCANCODE_Q: {
+			case SDL_SCANCODE_E: {
 				SetPosition(GetPosition() + Vec3(0.0f, moveSpeed, 0.0f));
 				break;
 			}
-			case SDL_SCANCODE_E: {
+			case SDL_SCANCODE_Q: {
 				SetPosition(GetPosition() - Vec3(0.0f, moveSpeed, 0.0f));
 				break;
 			}

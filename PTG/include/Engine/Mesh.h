@@ -3,6 +3,7 @@
 #include <glew.h>
 #include <vector>
 #include <Vector.h>
+#include "Engine/TerrainMeshData.h"
 using namespace MATH;
 
 
@@ -17,13 +18,15 @@ private:
 	std::vector<Vec3> vertices;
 	std::vector<Vec3> normals;
 	std::vector<Vec2> uvCoords;
+
+	size_t indexCount;
 	size_t dateLength;
 	GLenum drawmode;
 
 	/// Private helper methods
 	void LoadModel(const char* filename);
 	void StoreMeshData(GLenum drawmode_);
-	GLuint vao, vbo;
+	GLuint vao, vbo, ebo;
 public:
 	
 	Mesh(const char* filename_);
@@ -42,6 +45,9 @@ public:
 		, drawmode{ 0 }
 		, vao{ 0 }
 		, vbo{ 0 }
+		, ebo{ 0 }
+		, filename{ nullptr }
+		, indexCount{ 0 }
 	{}
 	//loads a triangle into the mesh and fills in the vertices, normals, and uvCoords 
 	void LoadTriangle(const MATHEX::Triangle* triangle)
@@ -65,5 +71,9 @@ public:
 		StoreMeshData(GL_TRIANGLES);
 		return true;
 	}
+
+
+	// Terrain Mesh Data version of OnCreate
+	bool OnCreate(const TerrainMeshData& data);
 };
 

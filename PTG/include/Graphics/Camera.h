@@ -7,7 +7,7 @@
 #include <MMath.h>
 #include <VMath.h>
 #include <QMath.h>
-#include "SkyBox.h"
+#include "Graphics/SkyBox.h"
 using namespace MATH;
 
 union SDL_Event;
@@ -23,6 +23,7 @@ private:
 	float pitch = 0.0f;
 	float pitchAngle = 0.0f;
 	float sensitivity = 0.1f;
+	float moveSpeed = 0.5f;
 	bool mouseHeld = false;
 	bool ignoreNextMouseDelta = false;
 	bool canCamMove = false;
@@ -73,6 +74,7 @@ public:
 	void setM1Override(bool override) { m1Override = override; }
 	void setTarget(Vec3 target_) { target = target_; }
 	void setCamSensitivity(float sensitivity_) { sensitivity = sensitivity_; }
+	void setCamMoveSpeed(float moveSpeed_) { moveSpeed = moveSpeed_; }
 	// Getters for camera's worldspace directions
 	Vec3 GetCameraForward();
 	Vec3 GetCameraRight();

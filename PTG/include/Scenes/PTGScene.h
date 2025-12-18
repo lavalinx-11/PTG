@@ -5,6 +5,10 @@
 #include <Vector.h>
 #include <Matrix.h>
 #include "Graphics/Camera.h"
+#include "Engine/TerrainMeshBuilder.h"
+#include "Engine/TerrainChunk.h"
+#include <unordered_map>
+
 using namespace MATH;
 
 /// Forward declarations 
@@ -17,39 +21,40 @@ class Texture;
 class PTGScene : public Scene {
 private:
 	// Body
-	Body* terrain;
-
 
 	// Shaders
-	Shader* tessShader;
-	Shader* reflectionShader;
-	
+	Shader* terrainShader;
+
 	// Meshes
 	Mesh* mesh;
-	Mesh* terrainMesh;
 	
+
+
 	// Camera
 	Camera* cam;
 
 	// Textures
-	Texture* terrainTexture;
+	/*Texture* terrainTexture;
 	Texture* heightMap;
 	Texture* diffuseMap;
 	Texture* normalMap;
-	Texture* texture;
-	
-	
+	Texture* texture;*/
+
+
+	// Terrain Generation Variables
+	int chunkResolution = 32;
+	float chunkSize = 40.0f;
+	int seed = 1337;
+	int viewRadius = 10;
+	std::unordered_map<long long, TerrainChunk*> chunks;
+
+
 	// Math Variables
-	Matrix4 terrainModelMatrix;
 	Matrix4 modelMatrix;
-	Vec4 Diffuse[5];
-	Vec4 Specular[5];
-	Vec3 Litpos;
 	Vec3	   cameraPos;
 	Quaternion cameraOri;
 	// Regular Variables
 	bool drawInWireMode;
-	float tessLevel = 1.0f;
 
 public:
 	explicit PTGScene();
@@ -60,6 +65,9 @@ public:
 	virtual void Update(const float deltaTime) override;
 	virtual void Render() const override;
 	virtual void HandleEvents(const SDL_Event& sdlEvent) override;
+	inline long long ChunkKey(int x, int z) {
+		return (static_cast<long long>(x) << 32) ^ (z & 0xffffffff);
+	}
 };
 
 
