@@ -158,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Engine\Body.h" />
+    <ClInclude Include="include\Engine\ChunkManager.h" />
     <ClInclude Include="include\Engine\Collision.h" />
     <ClInclude Include="include\Engine\Debug.h" />
     <ClInclude Include="include\Engine\Mesh.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="include\Graphics\tiny_obj_loader.h" />
     <ClInclude Include="include\Graphics\Trackball.h" />
     <ClInclude Include="include\Graphics\Window.h" />
+    <ClInclude Include="include\Scenes\PTGScene.h" />
     <ClInclude Include="include\Scenes\Scene.h" />
     <ClInclude Include="include\Scenes\Scene0g.h" />
     <ClInclude Include="include\Scenes\Scene0p.h" />
@@ -186,7 +188,6 @@
     <ClInclude Include="include\Scenes\Scene4p.h" />
     <ClInclude Include="include\Scenes\Scene5g.h" />
     <ClInclude Include="include\Scenes\SceneManager.h" />
-    <ClInclude Include="PTGScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="GameEngineLog.txt" />

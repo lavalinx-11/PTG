@@ -84,7 +84,7 @@ bool Scene3p::OnCreate() {
 		"textures/hallnz.png"
 
 	);
-	cam->position = Vec3(0.0f, -2.0f, -5.5f);
+	cam->SetPosition(Vec3(0.0f, -2.0f, -5.5f));
 	shader = new Shader("shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");
 	if (shader->OnCreate() == false) {
 		std::cout << "Shader failed ... we have a problem\n";

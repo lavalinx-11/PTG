@@ -100,7 +100,7 @@ bool Scene2p::OnCreate() {
 		"textures/hallnz.png"
 
 	);
-	cam->position = Vec3(0.0f, 2.0f, 8.0f);
+	cam->SetPosition(Vec3(0.0f, 2.0f, 8.0f));
 	cam->setCamMovement(true);
 	shader = new Shader("shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");
 	//shader = new Shader("shaders/defaultVert.glsl", "shaders/defaultFrag.glsl");

@@ -61,7 +61,7 @@ bool Scene1p::OnCreate() {
 		"textures/hallnz.png"
 
 	);
-	cam->position = Vec3(0.0f, 2.0f, 5.5f);
+	cam->SetPosition(Vec3(0.0f, 2.0f, 5.5f));
 	return true;
 }
 

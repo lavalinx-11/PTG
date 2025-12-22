@@ -7,5 +7,9 @@ public:
 
 	MATH::Vec3 normal;
 	float d = 0.0f;
+
+	float Distance(const Vec3& p) const {
+		return VMath::dot(normal, p) + d;
+	}
 };
 

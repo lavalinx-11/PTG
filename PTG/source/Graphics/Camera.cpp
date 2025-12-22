@@ -35,6 +35,84 @@ Vec3 Camera::GetCameraRight() {
 	return VMath::normalize(Vec3(rightWorld.x, rightWorld.y, rightWorld.z));
 }
 
+void Camera::UpdateFrustum() {
+	Matrix4 vp = GetProjectionMatrix() * GetViewMatrix();
+
+	// Left
+	frustumPlanes[0].normal = Vec3(
+		vp[3] + vp[0],
+		vp[7] + vp[4],
+		vp[11] + vp[8]
+	);
+	frustumPlanes[0].d = vp[15] + vp[12];
+
+	// Right
+	frustumPlanes[1].normal = Vec3(
+		vp[3] - vp[0],
+		vp[7] - vp[4],
+		vp[11] - vp[8]
+	);
+	frustumPlanes[1].d = vp[15] - vp[12];
+
+	// Bottom
+	frustumPlanes[2].normal = Vec3(
+		vp[3] + vp[1],
+		vp[7] + vp[5],
+		vp[11] + vp[9]
+	);
+	frustumPlanes[2].d = vp[15] + vp[13];
+
+	// Top
+	frustumPlanes[3].normal = Vec3(
+		vp[3] - vp[1],
+		vp[7] - vp[5],
+		vp[11] - vp[9]
+	);
+	frustumPlanes[3].d = vp[15] - vp[13];
+
+	// Near
+	frustumPlanes[4].normal = Vec3(
+		vp[3] + vp[2],
+		vp[7] + vp[6],
+		vp[11] + vp[10]
+	);
+	frustumPlanes[4].d = vp[15] + vp[14];
+
+	// Far
+	frustumPlanes[5].normal = Vec3(
+		vp[3] - vp[2],
+		vp[7] - vp[6],
+		vp[11] - vp[10]
+	);
+	frustumPlanes[5].d = vp[15] - vp[14];
+
+	// Normalize planes
+	for (int i = 0; i < 6; i++) {
+		float len = VMath::mag(frustumPlanes[i].normal);
+		frustumPlanes[i].normal = VMath::normalize(frustumPlanes[i].normal);
+		frustumPlanes[i].d /= len;
+	}
+}
+
+bool Camera::IsAABBVisible(const AABB& box) const
+{
+	for (int i = 0; i < 6; i++) {
+		const Plane& p = frustumPlanes[i];
+
+		// Pick the vertex most in the direction of the plane normal
+		Vec3 positive(
+			p.normal.x > 0 ? box.max.x : box.min.x,
+			p.normal.y > 0 ? box.max.y : box.min.y,
+			p.normal.z > 0 ? box.max.z : box.min.z
+		);
+
+		if (p.Distance(positive) < 0) {
+			return false; // Completely outside
+		}
+	}
+	return true;
+}
+
 void Camera::OnDestroy() {
 	if (skybox) {
 		skybox->OnDestroy();

@@ -82,7 +82,7 @@ bool Scene3g::OnCreate() {
 		"textures/hallny.png",
 		"textures/hallnz.png"
 	);
-	cam->position = Vec3(0.0f, 0.0f, 7.0f);
+	cam->SetPosition(Vec3(0.0f, 0.0f, 7.0f));
 	modelMatrix = MMath::toMatrix4(Quaternion(1.0f, Vec3(0.0f, 0.0f, 0.0)));
 	return true;
 }

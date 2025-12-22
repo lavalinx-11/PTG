@@ -1,14 +1,34 @@
 #pragma once
 #include "Engine/Mesh.h"
 #include "Graphics/Shader.h"
+#include "Graphics/Camera.h"
+struct AABB {
+    Vec3 min;
+    Vec3 max;
+};
 
 class TerrainChunk {
 private:
     int chunkX;
     int chunkZ;
-    Mesh* mesh;
+	int resolution;
+    int seed;
+	int currentLOD = -1;
+	float chunkSize;
+    Mesh* mesh = nullptr;
+    AABB bounds;
+    static constexpr int LOD_RESOLUTIONS[3] = {
+       64, // HIGH
+       32, // MEDIUM
+       16  // LOW
+    };
 
-
+    enum class ChunkState {
+        UNLOADED,
+        LOADING,
+        LOADED,
+        UPLOADED
+	};;
 public:
     TerrainChunk(
         int chunkX,
@@ -19,12 +39,15 @@ public:
     );
 
     ~TerrainChunk();
+	void UpdateLOD(const Vec3& cameraPosition);
+    void Render(Shader& shader) const;
 
-    void Render(const Shader& shader) const;
 
-    // Move these methods to public to fix accessibility error
     int GetChunkX() const { return chunkX; }
     int GetChunkZ() const { return chunkZ; }
 
-
+    
+    float DistanceToCamera(const Vec3& camPos) const;
+	int ComputeLOD(const Vec3& camPos) const;
+    const AABB& GetBounds() const { return bounds; }
 };

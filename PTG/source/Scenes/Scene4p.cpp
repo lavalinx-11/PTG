@@ -114,7 +114,7 @@ bool Scene4p::OnCreate() {
 		"textures/hallny.png",
 		"textures/hallnz.png"
 	);
-	cam->position = Vec3(0.0f, 2.0f, 10.0f);
+	cam->SetPosition(Vec3(0.0f, 2.0f, 10.0f));
 	shader = new Shader("shaders/defaultVert.glsl", "shaders/defaultFrag.glsl");
 	if (shader->OnCreate() == false) {
 		std::cout << "Shader failed ... we have a problem\n";

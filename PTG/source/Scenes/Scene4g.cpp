@@ -88,7 +88,7 @@ bool Scene4g::OnCreate() {
 		"textures/hallny.png",
 		"textures/hallnz.png"
 	);
-	cam->position = Vec3(0.0f, 1.0f, 3.0f);
+	cam->SetPosition(Vec3(0.0f, 1.0f, 3.0f));
 	cam->setCamMovement(true);
 	// Shaders
 	tessShader = new Shader("shaders/tessalationVert.glsl", "shaders/tessalationFrag.glsl", 

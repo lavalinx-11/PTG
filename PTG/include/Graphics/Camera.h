@@ -7,10 +7,13 @@
 #include <MMath.h>
 #include <VMath.h>
 #include <QMath.h>
+#include "Engine/Plane.h"
 #include "Graphics/SkyBox.h"
+#include "Engine/TerrainChunk.h"
 using namespace MATH;
 
 union SDL_Event;
+struct AABB;
 
 class Camera {
 private:
@@ -28,9 +31,10 @@ private:
 	bool ignoreNextMouseDelta = false;
 	bool canCamMove = false;
 	bool m1Override = false;
+	Vec3 position;
+	Plane frustumPlanes[6]; // 0 - right, 1 - left, 2 - top, 3 - bottom, 4 - near, 5 - far
 
 public:
-	Vec3 position;
 	Camera();
 	~Camera();
 	bool OnCreate();
@@ -78,4 +82,7 @@ public:
 	// Getters for camera's worldspace directions
 	Vec3 GetCameraForward();
 	Vec3 GetCameraRight();
+
+	void UpdateFrustum();
+	bool IsAABBVisible(const AABB& box) const;
 };

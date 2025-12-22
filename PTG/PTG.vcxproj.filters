@@ -161,9 +161,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PTGScene.h">
-      <Filter>Header Files\Scenes\PTG</Filter>
-    </ClInclude>
     <ClInclude Include="include\Engine\Body.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
@@ -250,6 +247,12 @@
     </ClInclude>
     <ClInclude Include="include\Engine\TerrainChunk.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\ChunkManager.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scenes\PTGScene.h">
+      <Filter>Header Files\Scenes\PTG</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

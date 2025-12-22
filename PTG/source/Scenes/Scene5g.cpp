@@ -132,7 +132,7 @@ bool Scene5g::OnCreate() {
 		"textures/hallnz.png"
 
 	);
-	cam->position = Vec3(0.0f, 1.0f, 3.5f);
+	cam->SetPosition(Vec3(0.0f, 1.0f, 3.5f));
 
 	// Shaders
 	shader = new Shader("shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");

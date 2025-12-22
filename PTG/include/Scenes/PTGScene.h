@@ -5,9 +5,7 @@
 #include <Vector.h>
 #include <Matrix.h>
 #include "Graphics/Camera.h"
-#include "Engine/TerrainMeshBuilder.h"
-#include "Engine/TerrainChunk.h"
-#include <unordered_map>
+#include "Engine/ChunkManager.h"
 
 using namespace MATH;
 
@@ -28,8 +26,6 @@ private:
 	// Meshes
 	Mesh* mesh;
 	
-
-
 	// Camera
 	Camera* cam;
 
@@ -41,13 +37,7 @@ private:
 	Texture* texture;*/
 
 
-	// Terrain Generation Variables
-	int chunkResolution = 32;
-	float chunkSize = 40.0f;
-	int seed = 1337;
-	int viewRadius = 10;
-	std::unordered_map<long long, TerrainChunk*> chunks;
-
+	ChunkManager* chunkManager;
 
 	// Math Variables
 	Matrix4 modelMatrix;
@@ -65,9 +55,6 @@ public:
 	virtual void Update(const float deltaTime) override;
 	virtual void Render() const override;
 	virtual void HandleEvents(const SDL_Event& sdlEvent) override;
-	inline long long ChunkKey(int x, int z) {
-		return (static_cast<long long>(x) << 32) ^ (z & 0xffffffff);
-	}
 };
 
 
