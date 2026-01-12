@@ -69,11 +69,7 @@ public:
 		if (showChunkDebug) {
 			int visible = ChunksInView(cam);
 
-			Debug::Info(
-				"Visible chunks: " + std::to_string(visible),
-				__FILE__,
-				__LINE__
-			);
+			std::cout << "Visible chunks: " << visible << std::endl;
 		}
 	}
 
@@ -134,6 +130,12 @@ public:
 	int GetVisibleChunkCount() const {
 		return visibleChunkCount;
 	}
-
+	void ShowChunksInViewToggle() {
+		if (showChunkDebug) {
+			showChunkDebug = false;
+		}
+		else
+			showChunkDebug = true;
+	}
 };
 
