@@ -1,6 +1,6 @@
 #include "Engine/TerrainChunk.h"
 #include "Engine/TerrainMeshBuilder.h"
-
+#include "Engine/TerrainMeshData.h"
 TerrainChunk::TerrainChunk(
     int x,
     int z,
@@ -13,6 +13,8 @@ TerrainChunk::TerrainChunk(
     , resolution(resolution_)
     , chunkSize(size_)
     , seed(seed_)
+   
+
 {
     TerrainMeshData data =
         TerrainMeshBuilder::BuildFlatGrid(
@@ -34,6 +36,19 @@ TerrainChunk::TerrainChunk(
     bounds.max = Vec3(maxX, maxY, maxZ);
     mesh = new Mesh();
     mesh->OnCreate(data);
+
+
+    TerrainMeshData placeholder = TerrainMeshBuilder::BuildFlatGrid(
+        1,            // super low res (2 triangles)
+        chunkSize, 
+        chunkX,
+        chunkZ,
+        seed
+    );
+
+    mesh = new Mesh();
+    mesh->OnCreate(placeholder);  // GPU upload, tiny
+    state = ChunkState::Generating;
 }
 
 TerrainChunk::~TerrainChunk() {

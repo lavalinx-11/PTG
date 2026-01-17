@@ -42,6 +42,7 @@ bool PTGScene::OnCreate() {
 		10      // view radius
 	);
 	
+
 	//chunkManager->ShowChunksInViewToggle();
 	// Camera Initialization
 	cam = new Camera();

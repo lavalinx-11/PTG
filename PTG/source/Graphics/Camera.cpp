@@ -107,7 +107,7 @@ bool Camera::IsAABBVisible(const AABB& box) const
 		);
 
 		if (p.Distance(positive) < 0) {
-			return false; // Completely outside
+			return false; // Completely outside of view
 		}
 	}
 	return true;

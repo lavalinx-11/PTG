@@ -74,6 +74,7 @@ public:
 			MMath::translate(translated_position);
 
 	}
+
 	void setCamMovement(bool canMove) { canCamMove = canMove; }
 	void setM1Override(bool override) { m1Override = override; }
 	void setTarget(Vec3 target_) { target = target_; }
