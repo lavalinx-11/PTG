@@ -23,24 +23,33 @@ struct ChunkBuildResult {
 };	
 class ChunkManager {
 private:
+
+
+	// <- Chunk parameters and storage -> //
 	int chunkResolution = 50; // Default is 50
 	float chunkSize = 40.0f; // Default is 40.0f
 	int seed = 1337; // Default seed
 	int viewRadius = 10; // Default view radius 10
 	std::unordered_map<long long, TerrainChunk*> chunks;
 	int visibleChunkCount = 0;
+
+	// <- Debug options -> //
 	bool showChunkDebug = false;
+	bool showAsyncDebug = true;
+
+	// <- Worker thread and job queues ->//
 	std::thread workerThread;
 	std::mutex jobMutex;
 	std::queue<ChunkBuildTask> jobQueue;	
 	std::condition_variable jobCv;
-
-	// Completed results (worker -> main thread)
 	std::mutex completedMutex;
 	std::queue<ChunkBuildResult> completedQueue;
 
+	// <- Atomic running flag -> //
 	std::atomic<bool> running = true;
-	bool showAsyncDebug = true;
+
+
+
 
 	//  <- Assistant functions -> //
 	long long ChunkKey(int chunkX, int chunkZ) const {
@@ -51,7 +60,7 @@ private:
 		return static_cast<int>(std::floor(worldPos / chunkSize));
 	}
 
-	static Vec3 ColorForChunkState(TerrainChunk::ChunkState s) {
+	static Vec3 ColourForChunkState(TerrainChunk::ChunkState s) {
 		switch (s) {
 		case TerrainChunk::ChunkState::Generating: return Vec3(1.0f, 1.0f, 0.0f); 
 		case TerrainChunk::ChunkState::Ready:      return Vec3(0.0f, 0.5f, 1.0f); // blue
@@ -85,7 +94,7 @@ public:
 		chunks.clear();
 	}
 	
-
+	// <- Main update and render functions -> //
 	void Update(const Camera& cam) {
 		int camChunkX = WorldToChunk(cam.GetPosition().x);
 		int camChunkZ = WorldToChunk(cam.GetPosition().z);
@@ -94,10 +103,11 @@ public:
 		RemoveFarChunks(camChunkX, camChunkZ);
 		UpdateLODs(cam.GetPosition());
 
-		// Apply completed async jobs (MAIN THREAD)
-		const int uploadBudget = 2; // keep your budget so you can SEE blue/ready states
+		const int uploadBudget = 60; 
 		int uploadsThisFrame = 0;
 
+
+		// ;; for infinite loop until all jobs completed or budget used up
 		for (;;) {
 			if (uploadsThisFrame >= uploadBudget)
 				break;
@@ -105,10 +115,11 @@ public:
 			ChunkBuildResult result;
 
 			{
+				// Check for completed jobs
 				std::lock_guard<std::mutex> lock(completedMutex);
 				if (completedQueue.empty())
 					break;
-
+				
 				result = std::move(completedQueue.front());
 				completedQueue.pop();
 			}
@@ -120,15 +131,11 @@ public:
 				continue;
 			}
 
+			// Apply the result to the chunk
 			TerrainChunk* chunk = it->second;
-
-			// Mark "Ready" briefly if you want (blue)
 			chunk->SetState(TerrainChunk::ChunkState::Ready);
-
-			// Upload GPU mesh (MAIN THREAD)
 			chunk->CreateMeshFromData(result.data);
 			chunk->SetState(TerrainChunk::ChunkState::Uploaded);
-
 			uploadsThisFrame++;
 		}
 
@@ -136,8 +143,9 @@ public:
 
 	void Render(const Camera& cam, Shader& shader) {
 		visibleChunkCount = 0;
-		int generating = 0, ready = 0, uploaded = 0;
 
+		// Count chunks by state for debug output
+		int generating = 0, ready = 0, uploaded = 0;
 		for (const auto& pair : chunks) {
 			auto s = pair.second->GetState();
 			if (s == TerrainChunk::ChunkState::Generating) generating++;
@@ -157,30 +165,31 @@ public:
 
 		GLuint uDebugColor = shader.GetUniformID("debugColor");
 
+		// Render each chunk with debug coloring
 		for (const auto& pair : chunks) {
 			TerrainChunk* chunk = pair.second;
 
 			bool visible = cam.IsAABBVisible(chunk->GetBounds());
 			
-			Vec3 color;
+			Vec3 colour;
 
 			if (showAsyncDebug) {
-				// Color by ASYNC STATE first
-				color = ColorForChunkState(chunk->GetState());
+				// Colour by async state
+				colour = ColourForChunkState(chunk->GetState());
 
 				// If you still want culled chunks obvious, override to red:
 				if (!visible) {
-					color = Vec3(1.0f, 0.0f, 0.0f);
+					colour = Vec3(1.0f, 0.0f, 0.0f);
 				}
 			}
 			else {
-				// Original: color by frustum visibility
-				color = visible ? Vec3(0.0f, 1.0f, 0.0f)
+				// Colour by frustum visibility
+				colour = visible ? Vec3(0.0f, 1.0f, 0.0f)
 					: Vec3(1.0f, 0.0f, 0.0f);
 			}
 
 
-			glUniform3fv(uDebugColor, 1, &color.x);
+			glUniform3fv(uDebugColor, 1, &colour.x);
 
 			if (visible && chunk->HasMesh()) {
 				chunk->Render(shader);
@@ -198,6 +207,8 @@ public:
 		}
 	}
 
+
+	// <- Chunk management functions -> //
 	void StreamChunks(int camChunkX, int camChunkZ) {
 		for (int z = camChunkZ - viewRadius; z <= camChunkZ + viewRadius; z++) {
 			for (int x = camChunkX - viewRadius; x <= camChunkX + viewRadius; x++) {
@@ -253,6 +264,8 @@ public:
 		return visibleCount;
 	}
 
+	void ToggleAsyncDebug() { showAsyncDebug = !showAsyncDebug; }
+
 
 	int GetVisibleChunkCount() const {
 		return visibleChunkCount;
@@ -265,7 +278,7 @@ public:
 			showChunkDebug = true;
 	}
 
-
+	// <- Worker thread function -> //
 	void WorkerLoop() {
 		while (running) {
 			ChunkBuildTask job;
@@ -301,7 +314,6 @@ public:
 	}
 
 
-	void ToggleAsyncDebug() { showAsyncDebug = !showAsyncDebug; }
 
 
 		
