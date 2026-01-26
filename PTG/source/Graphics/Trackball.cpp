@@ -1,5 +1,5 @@
 #include <glew.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "Graphics/Trackball.h"
 #include <VMath.h>
 #include <QMath.h>

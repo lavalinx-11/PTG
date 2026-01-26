@@ -1,7 +1,7 @@
 #include "Scenes/Scene4p.h"
 #include <glew.h>
 #include <iostream>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <MMath.h>
 #include <Plane.h>
 #include "Engine/Debug.h"
@@ -11,8 +11,8 @@
 #include "Graphics/Shader.h"
 #include "Graphics/SkyBox.h"
 #include "Graphics/Texture.h"
-#include "TMath.h"
-#include "Dot.h"	
+#include <TMath.h>
+#include <Dot.h>
 using namespace MATHEX;
 
 Scene4p::Scene4p()

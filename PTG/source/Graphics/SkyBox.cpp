@@ -1,13 +1,13 @@
 #include <glew.h>
 #include <iostream>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <MMath.h>
 #include "Engine/Debug.h"
 #include "Engine/Mesh.h"
 #include "Engine/Body.h"
 #include "Graphics/SkyBox.h"
 #include "Graphics/Shader.h"
-#include <SDL_image.h>
+#include <SDL2/SDL_image.h>
 
 SkyBox::SkyBox(const char* posXFileName_, const char* posYFileName_, const char* posZFileName_, const char* negXFileName_, const char* negYFileName_, const char* negZFileName_) {
 	posXFileName = posXFileName_;

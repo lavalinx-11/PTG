@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <MMath.h>
 #include <glew.h>
 #include "Engine/Debug.h"
@@ -6,7 +6,7 @@
 #include "Engine/Body.h"
 #include "Graphics/Camera.h"
 #include "Graphics/Shader.h"
-#include <SDL_image.h>
+#include <SDL2/SDL_image.h>
 
 Camera::Camera() {
 	projection = MMath::perspective(45.0f, (16.0f / 9.0f), 0.5f, 10000.0f);
@@ -14,6 +14,7 @@ Camera::Camera() {
 	orientation = Quaternion(1.0f, Vec3(0.0f, 0.0f, 0.0f));
 	pitchAngle = 0.0f;
 	yaw = 0.0f;
+	skybox = nullptr; // Fix: Initialize skybox to nullptr
 }
 
 void Camera::SetView(const Quaternion& orientation_, const Vec3& position_) {

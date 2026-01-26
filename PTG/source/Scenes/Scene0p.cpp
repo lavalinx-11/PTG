@@ -1,6 +1,6 @@
 #include <glew.h>
 #include <iostream>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "Scenes/Scene0p.h"
 #include <MMath.h>
 #include "Engine/Debug.h"
@@ -22,7 +22,7 @@ bool Scene0p::OnCreate() {
 	Debug::Info("Loading assets Scene0: ", __FILE__, __LINE__);
 	sphere = new Body();
 	sphere->OnCreate();
-	sphere->angularVel.z = 0.2;
+	sphere->angularVel.z = 0.2f;
 	sphere->rad = 1;
 	
 
@@ -86,7 +86,7 @@ void Scene0p::Update(const float deltaTime) {
 	//Umer code bad way of lsower down spin and go other way
 	float speed = VMath::mag(sphere->angularVel) * sphere->rad;
 	///sphere->vel = speed * Vec3(1, 0, 0);
-	sphere->vel = Vec3(0.0f, 0.0f, 0.2);
+	sphere->vel = Vec3(0.0f, 0.0f, 0.2f);
 	sphere->UpdateOrientation(deltaTime);
 	sphere->UpdatePos(deltaTime);
 	

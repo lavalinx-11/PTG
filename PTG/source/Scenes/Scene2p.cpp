@@ -1,7 +1,7 @@
 #include "Scenes/Scene2p.h"
 #include <glew.h>
 #include <iostream>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <MMath.h>
 #include "Engine/Debug.h"
 #include "Engine/Mesh.h"

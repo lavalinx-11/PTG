@@ -1,6 +1,6 @@
 #include <glew.h>
 #include <iostream>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <MMath.h>
 #include "Scenes/Scene1g.h"
 #include "Engine/Debug.h"
