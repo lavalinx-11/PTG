@@ -1,4 +1,4 @@
-Mon Jan 26 12:32:32 2026
+Fri Jan 30 17:30:29 2026
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 Compatibility Profile Context 26.1.1.251223
 [INFO]: Graphics card vendor ATI Technologies Inc.
@@ -12,6 +12,46 @@ Mon Jan 26 12:32:32 2026
 "modelMatrix" loc:2
 "debugColor" loc:3
 
-[INFO]: Deleting the SceneManager
 [INFO]: Deleting assets PTGScene: 
 [INFO]: Deleted PTGScene: 
+[INFO]: Created Scene5g: 
+[INFO]: Loading assets Scene5g: 
+[INFO]: Uniforms:
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+"skybox" loc:3
+
+[INFO]: Uniforms:
+"modelMatrix" loc:15
+"viewMatrix" loc:24
+"Litpos[0]" loc:5
+"projectionMatrix" loc:20
+"Diffuse[0]" loc:0
+"myTexture" loc:19
+"Specular[0]" loc:10
+
+[INFO]: Uniforms:
+"color" loc:3
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+"modelMatrix" loc:2
+
+[INFO]: Uniforms:
+"viewMatrix" loc:1
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"skybox" loc:3
+
+[INFO]: Uniforms:
+"tessalationLev" loc:12
+"heightMap" loc:1
+"viewMatrix" loc:13
+"modelMatrix" loc:4
+"lightPos" loc:3
+"projectionMatrix" loc:8
+"diffuseMap" loc:0
+"normalMap" loc:2
+
+[INFO]: Deleting the SceneManager
+[INFO]: Deleting assets Scene1: 
+[INFO]: Deleted Scene5g: 

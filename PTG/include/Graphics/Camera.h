@@ -17,11 +17,22 @@ struct AABB;
 
 class Camera {
 private:
+
+	// <- Class Variables -> //
 	Quaternion orientation;
 	Matrix4 projection;
 	Matrix4 view;
 	SkyBox* skybox;
 	Vec3 target = Vec3(0.0f, 0.0f, 0.0f);
+	Vec3 position;
+
+
+	// <- Frustum Planes -> //
+	// 0 - right, 1 - left, 2 - top, 3 - bottom, 4 - near, 5 - far
+	Plane frustumPlanes[6]; 
+	
+	
+	// <- Base Variables -> //
 	float yaw = 0.0f;
 	float pitch = 0.0f;
 	float pitchAngle = 0.0f;
@@ -31,8 +42,6 @@ private:
 	bool ignoreNextMouseDelta = false;
 	bool canCamMove = false;
 	bool m1Override = false;
-	Vec3 position;
-	Plane frustumPlanes[6]; // 0 - right, 1 - left, 2 - top, 3 - bottom, 4 - near, 5 - far
 
 public:
 	Camera();
@@ -43,26 +52,20 @@ public:
 	void OnDestroy();
 	void RenderSkyBox() const;
 	void HandleEvents(const SDL_Event& sdlEvent);
-
+	void Update(const float deltaTime);
+	//void UpdateViewMatrix();
 	Matrix4 GetViewMatrix() const {
 		Quaternion viewQuat = QMath::conjugate(orientation);
 		Matrix4 viewRotation = MMath::toMatrix4(viewQuat);
 		Matrix4 viewTranslation = MMath::translate(-position.x, -position.y, -position.z);
 		return viewRotation * viewTranslation;
 	}
-
 	Matrix4 GetProjectionMatrix() const { return projection; }
-
 	Quaternion GetOrientation() const { return orientation; }
-
 	void SetView(const Quaternion& orientation_, const Vec3& position_);
-
 	Vec3 GetPosition() const { return position; }
-
 	void SetPosition(Vec3 newPos) { position = newPos; }
-
 	void setOrientaion(Quaternion newOri) { orientation = newOri; }
-
 	int GetSkyTexID() { return skybox->GetTexture(); }
 	Matrix4 GetViewMatrix2() const {
 
@@ -74,7 +77,6 @@ public:
 			MMath::translate(translated_position);
 
 	}
-
 	void setCamMovement(bool canMove) { canCamMove = canMove; }
 	void setM1Override(bool override) { m1Override = override; }
 	void setTarget(Vec3 target_) { target = target_; }

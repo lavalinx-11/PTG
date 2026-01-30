@@ -109,6 +109,7 @@ void PTGScene::HandleEvents(const SDL_Event& sdlEvent) {
 
 void PTGScene::Update(const float deltaTime) {
 	chunkManager->Update(*cam);
+	cam->Update(deltaTime);	
 }
 
 void PTGScene::Render() const {

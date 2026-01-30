@@ -102,44 +102,11 @@
     <ClCompile Include="source\Graphics\Texture.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="source\Graphics\Trackball.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="source\Graphics\Window.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="source\Scenes\Scene0g.cpp">
-      <Filter>Source Files\Scenes\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scenes\Scene1g.cpp">
-      <Filter>Source Files\Scenes\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scenes\Scene2g.cpp">
-      <Filter>Source Files\Scenes\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scenes\Scene3g.cpp">
-      <Filter>Source Files\Scenes\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scenes\Scene4g.cpp">
-      <Filter>Source Files\Scenes\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="source\Scenes\Scene5g.cpp">
       <Filter>Source Files\Scenes\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scenes\Scene0p.cpp">
-      <Filter>Source Files\Scenes\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scenes\Scene1p.cpp">
-      <Filter>Source Files\Scenes\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scenes\Scene2p.cpp">
-      <Filter>Source Files\Scenes\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scenes\Scene3p.cpp">
-      <Filter>Source Files\Scenes\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Scenes\Scene4p.cpp">
-      <Filter>Source Files\Scenes\Physics</Filter>
     </ClCompile>
     <ClCompile Include="source\Scenes\SceneManager.cpp">
       <Filter>Source Files\Scenes</Filter>
@@ -194,41 +161,11 @@
     <ClInclude Include="include\Graphics\tiny_obj_loader.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="include\Graphics\Trackball.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="include\Graphics\Window.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scenes\Scene0g.h">
-      <Filter>Header Files\Scenes\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scenes\Scene1g.h">
-      <Filter>Header Files\Scenes\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scenes\Scene2g.h">
-      <Filter>Header Files\Scenes\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scenes\Scene3g.h">
-      <Filter>Header Files\Scenes\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scenes\Scene4g.h">
-      <Filter>Header Files\Scenes\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="include\Scenes\Scene5g.h">
       <Filter>Header Files\Scenes\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scenes\Scene0p.h">
-      <Filter>Header Files\Scenes\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scenes\Scene1p.h">
-      <Filter>Header Files\Scenes\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scenes\Scene3p.h">
-      <Filter>Header Files\Scenes\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scenes\Scene4p.h">
-      <Filter>Header Files\Scenes\Physics</Filter>
     </ClInclude>
     <ClInclude Include="include\Scenes\Scene.h">
       <Filter>Header Files\Scenes</Filter>

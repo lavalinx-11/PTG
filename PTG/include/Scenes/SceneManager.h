@@ -14,20 +14,6 @@ public:
 	
 private:
 	enum class SCENE_NUMBER {
-		SCENE0g = 0,
-		SCENE0p,
-		SCENE1,
-		SCENE1g,
-		SCENE1p,
-		SCENE2,
-		SCENE2g,
-		SCENE2p,
-		SCENE3,
-		SCENE3g,
-		SCENE3p,
-		SCENE4,
-		SCENE4g,
-		SCENE4p,
 		SCENE5g,
 		SCENE6,
 		PTGSCENE

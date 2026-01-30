@@ -2,16 +2,6 @@
 #include "Scenes/SceneManager.h"
 #include "Engine/Timer.h"
 #include "Graphics/Window.h"
-#include "Scenes/Scene0g.h"
-#include "Scenes/Scene0p.h"
-#include "Scenes/Scene1g.h"
-#include "Scenes/Scene1p.h"
-#include "Scenes/Scene2g.h"
-#include "Scenes/Scene2p.h"
-#include "Scenes/Scene3g.h"
-#include "Scenes/Scene3p.h"
-#include "Scenes/Scene4g.h"
-#include "Scenes/Scene4p.h"
 #include "Scenes/Scene5g.h"
 #include "Scenes/PTGScene.h"
 SceneManager::SceneManager(): 
@@ -91,32 +81,7 @@ void SceneManager::HandleEvents() {
 				isRunning = false;
 				return;
 				
-
 			case SDL_SCANCODE_F1:
-				BuildNewScene(SCENE_NUMBER::SCENE1p);
-				break;
-			case SDL_SCANCODE_F2:
-				BuildNewScene(SCENE_NUMBER::SCENE1g);
-				break;
-			case SDL_SCANCODE_F3:
-				BuildNewScene(SCENE_NUMBER::SCENE2p);
-				break;
-			case SDL_SCANCODE_F4:
-				BuildNewScene(SCENE_NUMBER::SCENE2g);
-				break;
-			case SDL_SCANCODE_F5:
-				BuildNewScene(SCENE_NUMBER::SCENE3p);
-				break;
-			case SDL_SCANCODE_F6:
-				BuildNewScene(SCENE_NUMBER::SCENE3g);
-				break;
-			case SDL_SCANCODE_F7:
-				BuildNewScene(SCENE_NUMBER::SCENE4p);
-				break;
-			case SDL_SCANCODE_F8:
-				BuildNewScene(SCENE_NUMBER::SCENE4g);
-				break;
-			case SDL_SCANCODE_F9:
 				BuildNewScene(SCENE_NUMBER::SCENE5g);
 				break;
 			default:
@@ -142,53 +107,6 @@ bool SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 	}
 
 	switch (scene) {
-	case SCENE_NUMBER::SCENE0g:
-		currentScene = new Scene0g();
-		status = currentScene->OnCreate();
-		break;
-	case SCENE_NUMBER::SCENE0p:
-		currentScene = new Scene0p();
-		status = currentScene->OnCreate();
-		break;
-
-	case SCENE_NUMBER::SCENE1g:
-		currentScene = new Scene1g();
-		status = currentScene->OnCreate();
-		break;
-
-	case SCENE_NUMBER::SCENE1p:
-		currentScene = new Scene1p();
-		status = currentScene->OnCreate();
-		break;
-
-	case SCENE_NUMBER::SCENE2g:
-		currentScene = new Scene2g();
-		status = currentScene->OnCreate();
-		break;
-
-	case SCENE_NUMBER::SCENE2p:
-		currentScene = new Scene2p();
-		status = currentScene->OnCreate();
-		break;
-
-	case SCENE_NUMBER::SCENE3g:
-		currentScene = new Scene3g();
-		status = currentScene->OnCreate();
-		break;
-	case SCENE_NUMBER::SCENE3p:
-		currentScene = new Scene3p();
-		status = currentScene->OnCreate();
-		break;
-	case SCENE_NUMBER::SCENE4g:
-		currentScene = new Scene4g();
-		status = currentScene->OnCreate();
-		break;
-
-	case SCENE_NUMBER::SCENE4p:
-		currentScene = new Scene4p();
-		status = currentScene->OnCreate();
-		break;
-
 	case SCENE_NUMBER::SCENE5g:
 		currentScene = new Scene5g();
 		status = currentScene->OnCreate();

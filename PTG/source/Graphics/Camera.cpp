@@ -198,7 +198,7 @@ void Camera::HandleEvents(const SDL_Event& event) {
 	}
 
 
-	if (canCamMove) {
+	/*if (canCamMove) {
 		switch (event.type) {
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.scancode) {
@@ -231,9 +231,49 @@ void Camera::HandleEvents(const SDL_Event& event) {
 			}
 			}
 		}
-	}
+	}*/
 
 }
+void Camera::Update(const float deltaTime)
+{
+	if (!canCamMove) return;
+
+	const Uint8* keys = SDL_GetKeyboardState(nullptr);
+	float moveSpeed = 5.0f * deltaTime;
+
+	// 1. Create a direction vector to accumulate movement
+	Vec3 moveDir(0.0f, 0.0f, 0.0f);
+
+	// 2. Accumulate all inputs into the direction vector
+	if (keys[SDL_SCANCODE_W]) moveDir += GetCameraForward();
+	if (keys[SDL_SCANCODE_S]) moveDir -= GetCameraForward();
+	if (keys[SDL_SCANCODE_A]) moveDir -= GetCameraRight();
+	if (keys[SDL_SCANCODE_D]) moveDir += GetCameraRight();
+
+	// Vertical movement is usually independent of looking direction, 
+	// but you can include it in normalization if you want "3D flight" 
+	// to be consistent speed-wise.
+	if (keys[SDL_SCANCODE_E]) moveDir += Vec3(0.0f, 1.0f, 0.0f);
+	if (keys[SDL_SCANCODE_Q]) moveDir -= Vec3(0.0f, 1.0f, 0.0f);
+
+	// 3. Normalize and Apply
+	// We check magnitude to avoid division by zero if no keys are pressed
+	if (VMath::mag(moveDir) > 0.001f) {
+		moveDir = VMath::normalize(moveDir);
+		SetPosition(GetPosition() + moveDir * moveSpeed);
+	}
+
+	//UpdateViewMatrix();
+}
+
+//void Camera::UpdateViewMatrix() {
+//	// A view matrix is the inverse of the camera's world transform
+//	Matrix4 rotation = MMath::toMatrix4(orientation);
+//	Matrix4 translation = MMath::translate(position);
+//
+//	// View = Inverse(Model)
+//	viewMatrix = MMath::inverse(translation * rotation);
+//}
 
 void Camera::RenderSkyBox() const{
 	if (skybox == nullptr) return;
