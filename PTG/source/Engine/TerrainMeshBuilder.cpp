@@ -31,7 +31,7 @@ namespace {
     }
 }
 
-// Terrain Builder API
+// Terrain Builder 
 TerrainMeshData TerrainMeshBuilder::BuildFlatGrid(int resolution, float scale, int chunkX, int chunkZ, int seed)
 {
     TerrainMeshData meshData;

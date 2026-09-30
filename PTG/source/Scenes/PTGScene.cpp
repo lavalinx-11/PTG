@@ -1,7 +1,7 @@
 #include "Scenes/PTGScene.h"
 #include <iostream>
 #include <glew.h>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <MMath.h>
 #include "Engine/Debug.h"
 #include "Engine/Mesh.h"
@@ -74,32 +74,27 @@ void PTGScene::OnDestroy() {
 	delete chunkManager;
 	chunkManager = nullptr;
 }
-
 void PTGScene::HandleEvents(const SDL_Event& sdlEvent) {
 	cam->HandleEvents(sdlEvent);
 
 	switch (sdlEvent.type) {
-	case SDL_KEYDOWN:
-		switch (sdlEvent.key.keysym.scancode) {
-
-		case SDL_SCANCODE_O:
+	case SDL_EVENT_KEY_DOWN:
+		switch (sdlEvent.key.scancode) {
+	case SDL_SCANCODE_O:
 		{
 			drawInWireMode = !drawInWireMode;
-			
 			break;
 		}
 		}
 		break;
 
-	case SDL_MOUSEMOTION:
+	case SDL_EVENT_MOUSE_MOTION:
 		break;
 
-	case SDL_MOUSEBUTTONDOWN:
-		
-
+	case SDL_EVENT_MOUSE_BUTTON_DOWN:
 		break;
 
-	case SDL_MOUSEBUTTONUP:
+	case SDL_EVENT_MOUSE_BUTTON_UP:
 		break;
 
 	default:

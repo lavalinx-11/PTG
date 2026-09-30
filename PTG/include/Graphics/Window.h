@@ -1,9 +1,9 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <glew.h>
-#include <SDL2/SDL_opengl.h>
+#include <SDL3/SDL_opengl.h>
 #include <string>
 #include <iostream>
 #include "Engine/Debug.h"
